@@ -2,7 +2,7 @@ import React from 'react';
 import  { Card, CardImg, CardText, CardBody, CardTitle,
         CardSubtitle, Button, CardHeader, CardFooter,
         ListGroup, ListGroupItem, Form, FormGroup, Input,
-        InputGroupAddon, InputGroupText, InputGroup } from 'reactstrap';
+        InputGroupAddon, InputGroupText, InputGroup, Navbar, NavbarBrand } from 'reactstrap';
 
 class Feed extends React.Component {
 
@@ -55,6 +55,15 @@ class Feed extends React.Component {
         )
     }
 
+    renderNavbar() {
+        return (
+            <Navbar color="light" style={{border: "solid", borderBottomWidth: 1, borderTopWidth: 0,
+                                                     borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#cfcfcf"}}>
+                <NavbarBrand href="/" className="font-weight-bold">Home</NavbarBrand>
+            </Navbar>
+        )
+    }
+
     render() {
         const feed = this.props.posts.map((post) => {
             return (
@@ -89,6 +98,8 @@ class Feed extends React.Component {
         });
 
         return (
+            <React.Fragment>
+            {this.renderNavbar()}
             <div className="container">
                 <div className="row d-flex justify-content-center" style={{overflowY: "scroll", height: "100vh"}}>
                     <Card style={{width: 100+"%", margin: 10}}>
@@ -115,6 +126,7 @@ class Feed extends React.Component {
                     {feed}
                 </div>
             </div>
+            </React.Fragment>
         );
     }
 }
