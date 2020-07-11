@@ -1,8 +1,13 @@
 import React from 'react';
-import  { Card, CardImg, CardText, CardBody, CardTitle,
+import  { Row, Card, CardImg, CardText, CardBody, CardTitle,
         CardSubtitle, Button, CardHeader, CardFooter,
         ListGroup, ListGroupItem, Form, FormGroup, Input,
         InputGroupAddon, InputGroupText, InputGroup, Navbar, NavbarBrand } from 'reactstrap';
+import { Control, LocalForm, Errors } from 'react-redux-form';
+import ScrollBar from 'react-perfect-scrollbar';
+import "react-perfect-scrollbar/dist/css/styles.css";
+
+const required = (val) => val && val.length;
 
 class Feed extends React.Component {
 
@@ -10,8 +15,14 @@ class Feed extends React.Component {
         super(props);
     
         this.state = {
-            selectedPost: null
+            selectedPost: null,
+            tweetCharCount: 0,
+            errorVisible: false
         }
+
+        this.handleTweetSubmit = this.handleTweetSubmit.bind(this);
+        this.countChars = this.countChars.bind(this);
+        //this.toggleError = this.toggleError.bind(this);
     }
 
     onPostSelect(post){
@@ -22,6 +33,16 @@ class Feed extends React.Component {
         }
     }
 
+    countChars(event){
+        this.setState({
+            tweetCharCount: event.target.value.length
+        });
+    }
+
+    handleTweetSubmit(values){
+        alert(JSON.stringify(values.tweet.slice(0,150)));
+    }
+
     renderComment(post) {
         
         const comments = post.comments.map((comment) => {
@@ -29,7 +50,7 @@ class Feed extends React.Component {
                 <ListGroupItem className="p-2">
                     <div className="row m-0">
                         <div className="col-1 m-0 p-0">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 38, height: 38}} />
+                            <img src="https://f0.pngfuel.com/png/768/766/shin-chan-illustration-png-clip-art.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 38, height: 38}} />
                         </div>
                         <div className="col-11">
                             <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
@@ -41,7 +62,7 @@ class Feed extends React.Component {
         });
 
         return (
-            <React.Fragment className="p-2">
+            <div className="p-2">
                 <InputGroup className="pt-1">
                     <Input />
                     <InputGroupAddon addonType="append">
@@ -51,7 +72,7 @@ class Feed extends React.Component {
                 <ListGroup className="pt-1">
                     {comments}
                 </ListGroup>
-            </React.Fragment>
+            </div>
         )
     }
 
@@ -67,7 +88,7 @@ class Feed extends React.Component {
     render() {
         const feed = this.props.posts.map((post) => {
             return (
-                <div style={{width: 100+"%"}}>
+                <div onClick={() => {this.setState({ errorVisible: '' })}} style={{width: 100+"%"}}>
                     <Card style={{margin: 10}}>
                         <CardBody className="p-0">
                             <div className="row m-0 p-2">
@@ -101,30 +122,34 @@ class Feed extends React.Component {
             <React.Fragment>
             {this.renderNavbar()}
             <div className="container">
-                <div className="row d-flex justify-content-center" style={{overflowY: "scroll", height: "100vh"}}>
-                    <Card style={{width: 100+"%", margin: 10}}>
+                <ScrollBar className="row d-flex justify-content-center" style={{overflowY: "scroll", height: "100vh", position: "relative"}}>
+                    <Card onMouseLeave={() => {this.setState({ errorVisible: '' })}} onMouseEnter={() => {this.setState({ errorVisible: 'Required' })}} style={{width: 100+"%", margin: 10}}>
                         <CardBody className="p-0">
-                            <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
-                                <div className="col-1 m-0 p-0">
-                                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 40, height: 40}} />
+                            <LocalForm onSubmit={(values) => this.handleTweetSubmit(values)}>
+                                <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
+                                    <div className="col-1 m-0 p-0">
+                                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 40, height: 40}} />
+                                    </div>
+                                    <div className="col-11">
+                                        <CardTitle className="mb-1"><strong>Username</strong></CardTitle>
+                                        <Row className="form-group">
+                                            <Control.textarea onChange={this.countChars} model=".tweet" name="tweet" id="tweet" className="form-control" validators={{required}} />
+                                        </Row>
+                                        
+                                    </div>
                                 </div>
-                                <div className="col-11">
-                                    <CardTitle className="mb-1"><strong>Username</strong></CardTitle>
-                                    <Form>
-                                        <FormGroup>
-                                            <Input type="textarea" name="text" id="exampleText" />
-                                        </FormGroup>
-                                    </Form>
-                                </div>
-                            </div>
-                            
-                            <CardFooter className="p-1 m-0 bg-light">
-                                <Button className="mr-1" color="light" size="sm">Post</Button>
-                            </CardFooter> 
+                                
+                                <CardFooter className="p-1 m-0 bg-light">
+                                    <Button onClick={() => {this.setState({ errorVisible: 'Required' })}} type="submit" className="mr-1" color="light" size="sm">Post</Button>
+                                   
+                                    
+                                    <span className="font-weight-light small m-1" style={{float: "right"}}> { this.state.tweetCharCount ? 'Character Remaining: ' + (150 - this.state.tweetCharCount) : '' } <strong><Errors className="text-danger" model=".tweet" show="touched" messages={{required: this.state.errorVisible}} /></strong> </span>
+                                </CardFooter> 
+                            </LocalForm>
                         </CardBody>
                     </Card>
                     {feed}
-                </div>
+                </ScrollBar>
             </div>
             </React.Fragment>
         );
