@@ -6,13 +6,20 @@ import Profile from './ProfileComponent';
 import { POSTS } from '../shared/posts';
 import { Link, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { postTweet, postComment } from '../redux/ActionCreator';
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 const mapStateToProps = state => {
     return {
-        posts: state.posts
+        posts: state.posts,
+        comments: state.comments
     }
 }
+
+const mapDispatchToProp = (dispatch) => ({
+    postTweet: (tweet, username, name) => dispatch(postTweet(tweet, username, name)),
+    postComment: (userID, postID, comment, name, username) => dispatch(postComment(userID, postID, comment, name, username))
+})
 
 class Main extends React.Component {
 
@@ -22,6 +29,7 @@ class Main extends React.Component {
         this.state = {
             auth: true,
             user: {
+                id: 347,
                 name: 'Hriddhi Mondal',
                 username: 'hriddhi1990',
                 profile_picture: null,
@@ -55,17 +63,17 @@ class Main extends React.Component {
             </Switch>
             <div className="container">
                 <div className="row">
-                    <div className="col-md-1 p-0 d-none d-lg-block "> 
+                    <div className="col-lg-1 col-md-1 p-0 d-none d-md-block d-lg-block "> 
                         {this.renderSidebar()}
                     </div>
-                    <div className="col-md-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
+                    <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
                         <Switch>
-                            <Route path="/home" component={() => <Feed posts={this.props.posts}/>}/>
+                            <Route path="/home" component={() => <Feed posts={this.props.posts} comments={this.props.comments} postTweet={this.props.postTweet} postComment={this.props.postComment} user={this.state.user}/>}/>
                             <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>
                         </Switch>
                     </div>
-                    <div className="col-md-4 p-0">
-                        <News />
+                    <div className="col-lg-4 p-0 d-none d-lg-block ">
+                        {/* <News /> */}
                     </div>
                 </div>
             </div>
@@ -74,4 +82,4 @@ class Main extends React.Component {
     }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProp)(Main));

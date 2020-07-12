@@ -1,8 +1,6 @@
 import React from 'react';
-import  { Card, CardImg, CardText, CardBody, CardTitle,
-        CardSubtitle, Button, CardHeader, CardFooter,
-        ListGroup, ListGroupItem, Form, FormGroup, Input,
-        InputGroupAddon, InputGroupText, InputGroup } from 'reactstrap';
+import  { Card, CardBody, CardTitle,
+        CardHeader } from 'reactstrap';
 
 class News extends React.Component {
 
