@@ -142,7 +142,7 @@ class Feed extends React.Component {
                                 <OverlayTrigger placement="top" delay={{ show: 100, hide: 100 }} overlay={<Tooltip id="button-tooltip"> 
                                     { 
                                         (() => { 
-                                            if(this.props.likes[post.id] == undefined) 
+                                            if(this.props.likes[post.id] === undefined) 
                                                 return 'No Likes'; 
                                             else
                                                 return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{"User : " + user}</p>);
@@ -150,7 +150,7 @@ class Feed extends React.Component {
                                         
                                         
                                     }
-                                    {this.props.likes[post.id] != undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
+                                    {this.props.likes[post.id] !== undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
                                     </Tooltip>}>
                                     <Button id="Popover" type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm"><span style={{color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) return "red"; 
                                                                                                                                                                                 else return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] === undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
