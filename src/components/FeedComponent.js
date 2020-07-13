@@ -1,12 +1,14 @@
 import React from 'react';
 import  { Row, Card, CardText, CardBody, CardTitle, Button, CardFooter, ListGroup, ListGroupItem,
-        InputGroupAddon, InputGroup, Navbar, NavbarBrand, Popover, PopoverHeader, PopoverBody, UncontrolledPopover } from 'reactstrap';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+        InputGroupAddon, InputGroup, Navbar, NavbarBrand } from 'reactstrap';
+import { OverlayTrigger, Tooltip, Image } from 'react-bootstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
-import ScrollBar from 'react-perfect-scrollbar';
+import { fadeInDown } from 'react-animations';
+import Radium, { StyleRoot } from 'radium'
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 const required = (val) => val && val.length;
+
 
 class Feed extends React.Component {
 
@@ -33,7 +35,7 @@ class Feed extends React.Component {
     }
 
     onPostSelect(post){
-        if(this.props.selectedPost == post)
+        if(this.props.selectedPost === post)
             this.props.selectedPostFunc(null);    
         else
             this.props.selectedPostFunc(post);
@@ -73,7 +75,7 @@ class Feed extends React.Component {
                     <ListGroupItem key={comment.id} className="p-2">
                         <div className="row m-0">
                             <div className="col-1 m-0 p-0">
-                                <img src="https://f0.pngfuel.com/png/768/766/shin-chan-illustration-png-clip-art.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 38, height: 38}} />
+                                <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                             </div>
                             <div className="col-11">
                                 <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
@@ -97,7 +99,11 @@ class Feed extends React.Component {
                     </InputGroup>
                 </LocalForm>
                 <ListGroup className="pt-1">
-                    {comments}
+                    <StyleRoot>
+                        <div style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
+                            {comments}
+                        </div>
+                    </StyleRoot>
                 </ListGroup>
             </div>
         )
@@ -123,11 +129,11 @@ class Feed extends React.Component {
                         <CardBody className="p-0">
                             <div className="row m-0 p-2">
                                 <div className="col-1 m-0 p-0">
-                                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 40, height: 40}} />
+                                    <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                 </div>
                                 <div className="col-11">
-                                    <CardTitle className="mb-1"><strong>{post.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
-                                    <CardText>{post.tweet}</CardText>
+                                    <CardTitle className="mb-1 d-inline"><strong>{post.name} </strong><span className="font-weight-light">@{post.username}</span> </CardTitle><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}>Date</small>
+                                    <CardText style={{textAlign: "justify"}}>{post.tweet}</CardText>
                                 </div>
                             </div>
                             
@@ -138,20 +144,20 @@ class Feed extends React.Component {
                                         (() => { 
                                             if(this.props.likes[post.id] == undefined) 
                                                 return 'No Likes'; 
-                                            else 
+                                            else
                                                 return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{"User : " + user}</p>);
                                         })()
                                         
                                         
                                     }
-                                    {this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
+                                    {this.props.likes[post.id] != undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
                                     </Tooltip>}>
                                     <Button id="Popover" type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm"><span style={{color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) return "red"; 
-                                                                                                                                                                                else return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] == undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
+                                                                                                                                                                                else return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] === undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
                                 </OverlayTrigger>
                
 
-                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] == undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
+                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] === undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
                                 {            
                                     (() => {
                                         if(this.props.selectedPost != null && this.props.selectedPost.id === post.id){
@@ -178,7 +184,7 @@ class Feed extends React.Component {
                             <LocalForm onSubmit={(values) => this.handleTweetSubmit(values, this.props.user)}>
                                 <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
                                     <div className="col-1 m-0 p-0">
-                                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 40, height: 40}} />
+                                        <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                     </div>
                                     <div className="col-11">
                                         <CardTitle className="mb-1"><strong>Username</strong></CardTitle>

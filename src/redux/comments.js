@@ -5,7 +5,7 @@ export const Comments = (state = COMMENTS, action) => {
     switch(action.type) {
         case ActionTypes.POST_COMMENT:
             var comment = action.payload;
-            var newState = new Object(state);
+            var newState = {...state};
             if(newState[comment.postID] === undefined){
                 var x = comment.postID;
                 comment.id = 0;

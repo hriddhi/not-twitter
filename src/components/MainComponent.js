@@ -67,29 +67,39 @@ class Main extends React.Component {
         )
     }
 
+    renderFooter(){
+        return (
+            <div className="container-fluid" style={{height: 50, textAlign: "center", backgroundColor: "#ededed", border: "solid", borderBottomWidth: 0, borderTopWidth: 1,
+                                        borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#cfcfcf"}}>
+                <p className='m-2' style={{color: '#7a7a7a'}}>Made with <i className="fa fa-heart"></i> by <i> Hriddhi.</i></p>
+            </div>
+        )
+    }
+
     render() {
         return (
             <React.Fragment>
-            <Switch>
-                <Redirect to="/home" />
-            </Switch>
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-1 col-md-1 p-0 d-none d-md-block d-lg-block" style={{}}> 
-                        {this.renderSidebar()}
-                    </div>
-                    <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
-                        <Switch>
-                            <Route path="/home" component={() => <Feed posts={this.props.posts} comments={this.props.comments} likes={this.props.likes} postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} user={this.state.user}
-                                                                       feedScrollPos={this.state.feedScrollPos} feedScrollFunc={this.state.feedScrollFunc} selectedPost={this.state.selectedPost} selectedPostFunc={this.state.selectedPostFunc} />}/>
-                            <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>
-                        </Switch>
-                    </div>
-                    <div className="col-lg-4 p-0 d-none d-lg-block ">
-                        <News />
+                <Switch>
+                    <Redirect to="/home" />
+                </Switch>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-1 col-md-1 p-0 d-none d-md-block d-lg-block" style={{}}> 
+                            {this.renderSidebar()}
+                        </div>
+                        <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
+                            <Switch>
+                                <Route path="/home" component={() => <Feed posts={this.props.posts} comments={this.props.comments} likes={this.props.likes} postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} user={this.state.user}
+                                                                        feedScrollPos={this.state.feedScrollPos} feedScrollFunc={this.state.feedScrollFunc} selectedPost={this.state.selectedPost} selectedPostFunc={this.state.selectedPostFunc} />}/>
+                                <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>
+                            </Switch>
+                        </div>
+                        <div className="col-lg-4 p-0 d-none d-lg-block ">
+                            <News />
+                        </div>
                     </div>
                 </div>
-            </div>
+                {this.renderFooter()}
             </React.Fragment>
         )
     }

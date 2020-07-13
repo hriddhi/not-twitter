@@ -4,10 +4,6 @@ import  { Card, CardBody, CardTitle,
 
 class News extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <Card className="m-2">

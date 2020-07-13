@@ -17,7 +17,7 @@ class Profile extends React.Component {
             <React.Fragment>
                 {this.renderNavbar()}
                 <div className="container-fluid" style={{height: 30+"%", backgroundColor: "#cfcfcf", position: "relative"}}>
-                    <img src="https://f0.pngfuel.com/png/768/766/shin-chan-illustration-png-clip-art.png" alt="profile-image" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />
+                    <img src="https://f0.pngfuel.com/png/768/766/shin-chan-illustration-png-clip-art.png" alt="profile" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />
                 </div>
                 <div className="container-fluid" style={{height: 50, position: "relative"}}>
                     <Button outline className="mt-2" color="dark" size="sm" style={{float: "right"}}><strong>Edit Profile</strong></Button>
@@ -34,13 +34,13 @@ class Profile extends React.Component {
                     <ul className="nav nav-fill" style={{backgroundColor: "#ededed"}}>
                         <li className="nav-item">
                             <a className="nav-link active" style={{border: "solid", borderBottomWidth: 3, borderTopWidth: 0,
-                                                    borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#a6a6a6", color: "#757575"}} href="#"><strong>Tweets</strong></a>
+                                                    borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#a6a6a6", color: "#757575"}} href="/"><strong>Tweets</strong></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" style={{color: "#757575"}} href="#">Replies</a>
+                            <a className="nav-link" style={{color: "#757575"}} href="/">Replies</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" style={{color: "#757575"}} href="#">Likes</a>
+                            <a className="nav-link" style={{color: "#757575"}} href="/">Likes</a>
                         </li>
                     </ul>
                 </div>

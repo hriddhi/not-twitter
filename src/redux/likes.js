@@ -5,7 +5,7 @@ export const Likes = (state = LIKES, action) => {
     switch(action.type) {
         case ActionTypes.POST_LIKE:
             var like = action.payload;
-            var newState = new Object(state);
+            var newState = {...state};
             if(newState[like.postID] === undefined){
                 var x = like.postID;
                 newState[x] = [like.userID];
