@@ -133,23 +133,23 @@ class Feed extends React.Component {
                             
                             <CardFooter className="p-1 m-0 bg-light">
                                
-                            <OverlayTrigger placement="top" delay={{ show: 100, hide: 100 }} overlay={<Tooltip id="button-tooltip"> {this.props.likes[post.id] == undefined ? 'No Likes' : this.props.likes[post.id].map((user) => <p className="p-0 m-0">{"User : " + user}</p>) }</Tooltip>}
-                                >
-                                <Button id="Popover" type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm"><span style={{color: (() =>{
-                                                                                                                                                           if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) 
-                                                                                                                                                                            return "red"; 
-                                                                                                                                                                        else 
-                                                                                                                                                                            return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] == undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
+                                <OverlayTrigger placement="top" delay={{ show: 100, hide: 100 }} overlay={<Tooltip id="button-tooltip"> 
+                                    { 
+                                        (() => { 
+                                            if(this.props.likes[post.id] == undefined) 
+                                                return 'No Likes'; 
+                                            else 
+                                                return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{"User : " + user}</p>);
+                                        })()
+                                        
+                                        
+                                    }
+                                    {this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
+                                    </Tooltip>}>
+                                    <Button id="Popover" type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm"><span style={{color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) return "red"; 
+                                                                                                                                                                                else return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] == undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
                                 </OverlayTrigger>
-                                {/* <UncontrolledPopover placement="top" target="Popover" >
-                                    <PopoverHeader>Popover Title</PopoverHeader>
-                                    <PopoverBody>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</PopoverBody>
-                                </UncontrolledPopover>  */}
-
-                                
-                        
-                                
-
+               
 
                                 <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] == undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
                                 {            
