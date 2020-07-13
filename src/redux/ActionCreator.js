@@ -19,3 +19,11 @@ export const postComment = (userID, postID, comment, name, username) => ({
         username: username
     }
 });
+
+export const postLike = (userID, postID) => ({
+    type: ActionTypes.POST_LIKE,
+    payload: {
+        userID: userID,
+        postID: postID
+    }
+})

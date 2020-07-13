@@ -31,16 +31,16 @@ class Profile extends React.Component {
                     
                 </div>
                 <div className="container-fluid p-0" >
-                    <ul class="nav nav-fill" style={{backgroundColor: "#ededed"}}>
-                        <li class="nav-item">
-                            <a class="nav-link active" style={{border: "solid", borderBottomWidth: 3, borderTopWidth: 0,
+                    <ul className="nav nav-fill" style={{backgroundColor: "#ededed"}}>
+                        <li className="nav-item">
+                            <a className="nav-link active" style={{border: "solid", borderBottomWidth: 3, borderTopWidth: 0,
                                                     borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#a6a6a6", color: "#757575"}} href="#"><strong>Tweets</strong></a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" style={{color: "#757575"}} href="#">Replies</a>
+                        <li className="nav-item">
+                            <a className="nav-link" style={{color: "#757575"}} href="#">Replies</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" style={{color: "#757575"}} href="#">Likes</a>
+                        <li className="nav-item">
+                            <a className="nav-link" style={{color: "#757575"}} href="#">Likes</a>
                         </li>
                     </ul>
                 </div>

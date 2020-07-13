@@ -6,8 +6,7 @@ export const POSTS =
         name: 'Hriddhi Mondal',
         username: 'Hriddhi',
         image: null,
-        tweet: "What browser do you use and why? Chrome, Firefox, Brave, Opera, Safari, Edge, Vivaldi, Tor. I'd like to understand the nuance behind your decision.  I'd REALLY love to know if you've tried several and made a specific decision for a specific reason.",
-        like: 23
+        tweet: "What browser do you use and why? Chrome, Firefox, Brave, Opera, Safari, Edge, Vivaldi, Tor. I'd like to understand the nuance behind your decision.  I'd REALLY love to know if you've tried several and made a specific decision for a specific reason."
     },
     {
         id: '1',
@@ -15,8 +14,7 @@ export const POSTS =
         name: 'Hriddhi Mondal',
         username: 'Hriddhi',
         image: null,
-        tweet: 'This is a test string from the feeds. Make sure to change it later',
-        like: 23
+        tweet: 'This is a test string from the feeds. Make sure to change it later'
     },
     {
         id: '2',
@@ -24,8 +22,7 @@ export const POSTS =
         name: 'Hriddhi Mondal',
         username: 'Hriddhi',
         image: null,
-        tweet: 'This is a test string from the feeds. Make sure to change it later',
-        like: 23
+        tweet: 'This is a test string from the feeds. Make sure to change it later'
     },
     {
         id: '3',
@@ -33,8 +30,7 @@ export const POSTS =
         name: 'Hriddhi Mondal',
         username: 'Hriddhi',
         image: null,
-        tweet: 'This is a test string from the feeds. Make sure to change it later',
-        like: 23
+        tweet: 'This is a test string from the feeds. Make sure to change it later'
     },
     {
         id: '4',
@@ -42,7 +38,6 @@ export const POSTS =
         name: 'Hriddhi Mondal',
         username: 'Hriddhi',
         image: null,
-        tweet: 'This is a test string from the feeds. Make sure to change it later',
-        like: 23
+        tweet: 'This is a test string from the feeds. Make sure to change it later'
     }
 ];

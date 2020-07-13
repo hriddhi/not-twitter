@@ -11,24 +11,27 @@ class Feed extends React.Component {
 
     constructor(props) {
         super(props);
+
+        console.log('In constructor');
     
         this.state = {
-            selectedPost: null,
             tweetCharCount: 0,
-            errorVisible: false
+            errorVisible: false,
         }
 
         this.handleTweetSubmit = this.handleTweetSubmit.bind(this);
         this.countChars = this.countChars.bind(this);
-        
     }
 
     onPostSelect(post){
-        if(this.state.selectedPost != null) {
-            this.setState({ selectedPost: null });
-        } else {
-            this.setState({ selectedPost: post });
-        }
+        if(this.props.selectedPost == post)
+            this.props.selectedPostFunc(null);    
+        else
+            this.props.selectedPostFunc(post);
+    }
+
+    componentWillUnmount(){
+        console.log(this.props.feedScrollPos);
     }
 
     countChars(event){
@@ -37,13 +40,19 @@ class Feed extends React.Component {
         });
     }
 
+    handleTweetLike(user, post){
+        this.props.postLike(post.id, user.id);
+    }
+
     handleTweetSubmit(values, user){
-        //alert(JSON.stringify(values.tweet.slice(0,150)));
-        this.props.postTweet(values.tweet, user.username, user.name);
+        var tweet = values.tweet;
+        this.props.postTweet(tweet.slice(0,256), user.username, user.name);
+        this.props.feedScrollFunc(window.pageYOffset);
     }
 
     handleCommentSubmit(values, user, post){
-        this.props.postComment(user.id, post.id, values.comment, user.name, user.username)
+        this.props.postComment(user.id, post.id, values.comment, user.name, user.username);
+        this.props.feedScrollFunc(window.pageYOffset);
     }
 
     renderComment(post) {
@@ -94,8 +103,8 @@ class Feed extends React.Component {
     }
 
     render() {
+        
         const feed = this.props.posts.map((post) => {
-            var id = post.id;
             return (
                 <div key={post.id} style={{width: 100+"%"}}>
                     <Card style={{margin: 10}}>
@@ -111,11 +120,18 @@ class Feed extends React.Component {
                             </div>
                             
                             <CardFooter className="p-1 m-0 bg-light">
-                                <Button className="mr-1" color="light" size="sm"> {post.like} Likes</Button>
-                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}> {this.props.comments[post.id] == undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
+                               
+
+                                <Button onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm"><span style={{color: (() =>{
+                                                                                                                                                                        if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) 
+                                                                                                                                                                            return "red"; 
+                                                                                                                                                                        else 
+                                                                                                                                                                            return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] == undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
+                    
+                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] == undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
                                 {            
                                     (() => {
-                                        if(this.state.selectedPost != null && this.state.selectedPost.id === post.id){
+                                        if(this.props.selectedPost != null && this.props.selectedPost.id === post.id){
                                             return this.renderComment(post);
                                         }
                                     })()
@@ -127,12 +143,14 @@ class Feed extends React.Component {
             );
         });
 
+        
+
         return (
             <React.Fragment>
             {this.renderNavbar()}
-            <div className="container">
-                <ScrollBar className="row d-flex justify-content-center" style={{overflowY: "scroll", height: "100vh", position: "relative"}}>
-                    <Card onMouseLeave={() => {this.setState({ errorVisible: '' })}} onMouseEnter={() => {this.setState({ errorVisible: 'Required' })}} style={{width: 100+"%", margin: 10}}>
+            <div scrollTop={this.state.feedScrollPos} style={{width: 100+'%'}}>
+                
+                    <Card scrollTop={this.state.feedScrollPos} onMouseLeave={() => {this.setState({ errorVisible: '' })}} onMouseEnter={() => {this.setState({ errorVisible: 'Required' })}} style={{margin:10}}>
                         <CardBody className="p-0">
                             <LocalForm onSubmit={(values) => this.handleTweetSubmit(values, this.props.user)}>
                                 <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
@@ -149,19 +167,19 @@ class Feed extends React.Component {
                                 </div>
                                 
                                 <CardFooter className="p-1 m-0 bg-light">
-                                    <Button onClick={() => {this.setState({ errorVisible: 'Required' })}} type="submit" className="mr-1" color="light" size="sm">Post</Button>
-                                   
-                                    
-                                    <span className="font-weight-light small m-1" style={{float: "right"}}> { this.state.tweetCharCount ? 'Character Remaining: ' + (150 - this.state.tweetCharCount) : '' } <strong><Errors className="text-danger" model=".tweet" show="touched" messages={{required: this.state.errorVisible}} /></strong> </span>
+                                    <Button onClick={() => {this.setState({ errorVisible: 'Required' })}} type="submit" className="mr-1" color="light" size="sm">Post</Button> 
+                                    <span className="font-weight-light small m-1" style={{float: "right"}}> { this.state.tweetCharCount ? 'Character Remaining: ' + (256 - this.state.tweetCharCount) : '' } <strong><Errors className="text-danger" model=".tweet" show="touched" messages={{required: this.state.errorVisible}} /></strong> </span>
                                 </CardFooter> 
                             </LocalForm>
                         </CardBody>
                     </Card>
                     {feed}
-                </ScrollBar>
+                
             </div>
             </React.Fragment>
         );
+
+        
     }
 }
 
