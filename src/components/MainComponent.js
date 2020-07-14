@@ -7,14 +7,6 @@ import { connect } from 'react-redux';
 import { fetchPosts, postTweet, postComment, postLike } from '../redux/ActionCreator';
 import "react-perfect-scrollbar/dist/css/styles.css";
 
-const mapStateToProps = state => {
-    return {
-        posts: state.posts,
-        comments: state.comments,
-        likes: state.likes
-    }
-}
-
 const mapDispatchToProp = (dispatch) => ({
     fetchPosts: () => dispatch(fetchPosts()),
     postTweet: (tweet, username, name) => dispatch(postTweet(tweet, username, name)),
@@ -42,10 +34,6 @@ class Main extends React.Component {
                 commented_id: ['3'],
                 liked_id: ['76','98','34','1','2']
             },
-            feedScrollPos: 0,
-            feedScrollFunc: (val) => {this.setState({ feedScrollPos: val})},
-            selectedPost: null,
-            selectedPostFunc: (val) => {this.setState({ selectedPost: val})}
         };
     }
 
@@ -94,8 +82,7 @@ class Main extends React.Component {
                         </div>
                         <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
                             <Switch>
-                                <Route path="/home" component={() => <Feed posts={this.props.posts} comments={this.props.comments} likes={this.props.likes} postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} user={this.state.user}
-                                                                        feedScrollPos={this.state.feedScrollPos} feedScrollFunc={this.state.feedScrollFunc} selectedPost={this.state.selectedPost} selectedPostFunc={this.state.selectedPostFunc} />}/>
+                                <Route path="/home" component={() => <Feed postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} user={this.state.user} />}/>
                                 <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>
                             </Switch>
                         </div>
@@ -110,4 +97,4 @@ class Main extends React.Component {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProp)(Main));
+export default withRouter(connect(null, mapDispatchToProp)(Main));

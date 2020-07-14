@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import  { Row, Card, CardText, CardBody, CardTitle, Button, CardFooter, ListGroup, ListGroupItem,
         InputGroupAddon, InputGroup, Navbar, NavbarBrand } from 'reactstrap';
 import { OverlayTrigger, Tooltip, Image, Spinner } from 'react-bootstrap';
@@ -9,17 +10,27 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 
 const required = (val) => val && val.length;
 
+const mapStateToProps = state => {
+    return {
+        posts: state.posts,
+        comments: state.comments,
+        likes: state.likes
+    }
+}
+
 class Feed extends React.Component {
 
     constructor(props) {
         super(props);
 
-        console.log('In constructor');
+        console.log('Constructor Called');
     
         this.state = {
             tweetCharCount: 0,
             errorVisible: false,
-            popoverOpen: true
+            popoverOpen: true,
+            selectedPost: null
+            
         }
 
         this.handleTweetSubmit = this.handleTweetSubmit.bind(this);
@@ -34,14 +45,10 @@ class Feed extends React.Component {
     }
 
     onPostSelect(post){
-        if(this.props.selectedPost === post)
-            this.props.selectedPostFunc(null);    
+        if(this.state.selectedPost === post)
+            this.setState({ selectedPost: null });
         else
-            this.props.selectedPostFunc(post);
-    }
-
-    componentWillUnmount(){
-        console.log(this.props.feedScrollPos);
+            this.setState({ selectedPost: post });
     }
 
     countChars(event){
@@ -57,12 +64,12 @@ class Feed extends React.Component {
     handleTweetSubmit(values, user){
         var tweet = values.tweet;
         this.props.postTweet(tweet.slice(0,256), user.username, user.name);
-        this.props.feedScrollFunc(window.pageYOffset);
+        //this.props.feedScrollFunc(window.pageYOffset);
     }
 
     handleCommentSubmit(values, user, post){
         this.props.postComment(user.id, post.id, values.comment, user.name, user.username);
-        this.props.feedScrollFunc(window.pageYOffset);
+        //this.props.feedScrollFunc(window.pageYOffset);
     }
 
     renderComment(post) {
@@ -71,23 +78,27 @@ class Feed extends React.Component {
         if(this.props.comments[post.id] !== undefined){
             comments = this.props.comments[post.id].map((comment) => {
                 return (    
-                    <ListGroupItem key={comment.id} className="p-2">
-                        <div className="row m-0">
-                            <div className="col-1 m-0 p-0">
-                                <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
-                            </div>
-                            <div className="col-11">
-                                <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
-                                <CardText>{comment.comment}</CardText>
-                            </div>
+                    <StyleRoot>
+                        <div  key={post.id + "_" + comment.id + "_comment"} style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
+                            <ListGroupItem className="p-2">
+                                <div className="row m-0">
+                                    <div className="col-1 m-0 p-0">
+                                        <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                    </div>
+                                    <div className="col-11">
+                                        <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
+                                        <CardText>{comment.comment}</CardText>
+                                    </div>
+                                </div>
+                            </ListGroupItem>    
                         </div>
-                    </ListGroupItem>    
+                    </StyleRoot>
                 );
             });
         }
 
         return (
-            <div className="p-2">
+            <div key={post.id+"_comment_section"} className="p-2">
                 <LocalForm onSubmit={(values) => this.handleCommentSubmit(values, this.props.user, post)}>
                     <InputGroup className="pt-1">
                         <Control.text model=".comment" name="comment" id="comment" className="form-control" />
@@ -97,12 +108,8 @@ class Feed extends React.Component {
                         </InputGroupAddon>
                     </InputGroup>
                 </LocalForm>
-                <ListGroup className="pt-1">
-                    <StyleRoot>
-                        <div style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
-                            {comments}
-                        </div>
-                    </StyleRoot>
+                <ListGroup className="pt-1">    
+                    {comments}
                 </ListGroup>
             </div>
         )
@@ -121,7 +128,8 @@ class Feed extends React.Component {
     render() {
         const feed = this.props.posts.posts.map((post) => {
             return (
-                <div key={post.id} style={{width: 100+"%"}}>
+                <StyleRoot>
+                <div key={post.id + "-post"} style={{width: 100+"%"}}>
                     <Card style={{margin: 10}}>
                         <CardBody className="p-0">
                             <div className="row m-0 p-2">
@@ -141,7 +149,7 @@ class Feed extends React.Component {
                                             if(this.props.likes[post.id] === undefined) 
                                                 return 'No Likes'; 
                                             else
-                                                return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{"User : " + user}</p>);
+                                                return this.props.likes[post.id].slice(0,5).map((user) => <p key={post.id + "likes"} className="p-0 m-0">{"User : " + user}</p>);
                                         })()
                                     }
                                     {this.props.likes[post.id] !== undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
@@ -153,7 +161,7 @@ class Feed extends React.Component {
                                 <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] === undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
                                 {            
                                     (() => {
-                                        if(this.props.selectedPost != null && this.props.selectedPost.id === post.id){
+                                        if(this.state.selectedPost != null && this.state.selectedPost.id === post.id){
                                             return this.renderComment(post);
                                         }
                                     })()
@@ -162,6 +170,7 @@ class Feed extends React.Component {
                         </CardBody>
                     </Card>
                 </div>
+                </StyleRoot>
             );
         });
 
@@ -177,13 +186,13 @@ class Feed extends React.Component {
                 </React.Fragment>
             )
         } else if(this.props.posts.errMess) {
-            return <h1>Error</h1>;
+            return <h4>{this.props.posts.errMess}</h4>;
         } else {
             return (
                 <React.Fragment>
                     {this.renderNavbar()}
-                    <div scrollTop={this.state.feedScrollPos} style={{width: 100+'%'}}>
-                        <Card scrollTop={this.state.feedScrollPos} onMouseLeave={() => {this.setState({ errorVisible: '' })}} onMouseEnter={() => {this.setState({ errorVisible: 'Required' })}} style={{margin:10}}>
+                    <div style={{width: 100+'%'}}>
+                        <Card onMouseLeave={() => {this.setState({ errorVisible: '' })}} onMouseEnter={() => {this.setState({ errorVisible: 'Required' })}} style={{margin:10}}>
                             <CardBody className="p-0">
                                 <LocalForm onSubmit={(values) => this.handleTweetSubmit(values, this.props.user)}>
                                     <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
@@ -217,4 +226,4 @@ class Feed extends React.Component {
     }
 }
 
-export default Feed;
+export default connect(mapStateToProps)(Feed);
