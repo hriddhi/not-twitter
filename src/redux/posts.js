@@ -11,26 +11,26 @@ export const Posts = produce((draft = {
             draft.isLoading = true;
             draft.errMess = null;
             draft.posts = [];
-            return draft;
+            return;
 
         case ActionTypes.POST_FAILED:
             draft.isLoading = false;
             draft.errMess = action.payload;
             draft.posts = [];
-            return draft;
+            return;
 
         case ActionTypes.POST_SUCCESS:
             draft.isLoading = false;
             draft.errMess = null;
             draft.posts = action.payload;
-            return draft;
+            return;
 
         case ActionTypes.POST_TWEET:    
             var post = action.payload;
             post.comments = [];
             post.id = draft.posts.length;
             draft.posts.unshift(post);
-            return draft;
+            return;
     
         default:
             return draft;

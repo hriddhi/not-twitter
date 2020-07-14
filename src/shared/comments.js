@@ -34,8 +34,5 @@ export const COMMENTS = {
                 username: 'iamwatership',
                 date: "2012-10-16T17:57:28.556094Z"
             }
-        ],
-    '2' : [ ],
-    '3' : [ ],
-    '4' : [ ]
+        ]
 };

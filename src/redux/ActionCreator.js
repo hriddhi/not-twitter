@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { POSTS } from '../shared/posts';
+import { COMMENTS } from '../shared/comments';
 
 export const fetchPosts = () => (dispatch) => {
     dispatch(postLoading(true));
@@ -22,6 +23,34 @@ export const postSuccess = (posts) => ({
     type: ActionTypes.POST_SUCCESS,
     payload: posts
 });
+
+//===============================================================
+
+export const fetchComments = (id) => (dispatch) => {
+    dispatch(commentsLoading(id));
+
+    setTimeout(() => {
+        dispatch(commentsSuccess(COMMENTS[id],id));
+    }, 2000);
+}
+
+export const commentsLoading = (id) => ({
+    type: ActionTypes.COMMENT_LOADING,
+    id: id
+});
+
+export const commentsFailed = (errmess) => ({
+    type: ActionTypes.COMMENT_FAILED,
+    payload: errmess
+});
+
+export const commentsSuccess = (comments, id) => ({
+    type: ActionTypes.COMMENT_SUCCESS,
+    id: id,
+    payload: comments
+});
+
+//===============================================================
 
 export const postTweet = (tweet, username, name) => ({
     type: ActionTypes.POST_TWEET,

@@ -6,9 +6,14 @@ import { OverlayTrigger, Tooltip, Image, Spinner } from 'react-bootstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { fadeInDown, fadeIn } from 'react-animations';
 import Radium, { StyleRoot } from 'radium'
+import { fetchComments } from '../redux/ActionCreator';
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 const required = (val) => val && val.length;
+
+const mapDispatchToProp = (dispatch) => ({
+    fetchComments: (id) => dispatch(fetchComments(id))
+});
 
 const mapStateToProps = state => {
     return {
@@ -16,7 +21,7 @@ const mapStateToProps = state => {
         comments: state.comments,
         likes: state.likes
     }
-}
+};
 
 class Feed extends React.Component {
 
@@ -45,6 +50,9 @@ class Feed extends React.Component {
     }
 
     onPostSelect(post){
+        if(this.props.comments[post.id] === undefined && !this.props.comments.isLoading)
+            this.props.fetchComments(post.id);
+        
         if(this.state.selectedPost === post)
             this.setState({ selectedPost: null });
         else
@@ -73,30 +81,32 @@ class Feed extends React.Component {
     }
 
     renderComment(post) {
+            
+            var comments = null;
+            console.log(this.props.comments[post.id] !== undefined);
+            if(this.props.comments[post.id] !== undefined){
+                console.log('in here');
+                comments = this.props.comments[post.id].map((comment) => {
+                    return (    
+                        <StyleRoot>
+                            <div  key={post.id + "_" + comment.id + "_comment"} style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
+                                <ListGroupItem className="p-2">
+                                    <div className="row m-0">
+                                        <div className="col-1 m-0 p-0">
+                                            <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                        </div>
+                                        <div className="col-11">
+                                            <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
+                                            <CardText>{comment.comment}</CardText>
+                                        </div>
+                                    </div>
+                                </ListGroupItem>    
+                            </div>
+                        </StyleRoot>
+                    );
+                });
+            }
         
-        var comments = '';
-        if(this.props.comments[post.id] !== undefined){
-            comments = this.props.comments[post.id].map((comment) => {
-                return (    
-                    <StyleRoot>
-                        <div  key={post.id + "_" + comment.id + "_comment"} style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
-                            <ListGroupItem className="p-2">
-                                <div className="row m-0">
-                                    <div className="col-1 m-0 p-0">
-                                        <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
-                                    </div>
-                                    <div className="col-11">
-                                        <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
-                                        <CardText>{comment.comment}</CardText>
-                                    </div>
-                                </div>
-                            </ListGroupItem>    
-                        </div>
-                    </StyleRoot>
-                );
-            });
-        }
-
         return (
             <div key={post.id+"_comment_section"} className="p-2">
                 <LocalForm onSubmit={(values) => this.handleCommentSubmit(values, this.props.user, post)}>
@@ -108,8 +118,27 @@ class Feed extends React.Component {
                         </InputGroupAddon>
                     </InputGroup>
                 </LocalForm>
-                <ListGroup className="pt-1">    
-                    {comments}
+                <ListGroup className="pt-1"> 
+                {   
+                    (() => {
+                        console.log(this.props.comments[post.id] + " " + post.id);
+                        if(this.props.comments[post.id] === undefined && this.props.comments.isLoading){
+                            return (
+                                <React.Fragment>
+                                    <div style={{height: 130}}>
+                                        <div style={{width: 50, height: 50, paddingTop: 50,  margin: "0 auto"}}>
+                                            <Spinner animation="border" variant="dark" />
+                                        </div>
+                                    </div>
+                                </React.Fragment>
+                            )
+                        } else if(this.props.comments[post.id] === undefined && this.props.comments.errMess){
+                            return <h4>{this.props.posts.errMess}</h4>;
+                        } else {
+                            return comments;
+                        }
+                    })()
+                }
                 </ListGroup>
             </div>
         )
@@ -122,8 +151,6 @@ class Feed extends React.Component {
             </Navbar>
         )
     }
-
-    
 
     render() {
         const feed = this.props.posts.posts.map((post) => {
@@ -158,7 +185,7 @@ class Feed extends React.Component {
                                                                                                                                                                                 else return "grey"})()}} className="fa fa-heart"></span> {this.props.likes[post.id] === undefined ? 0 : this.props.likes[post.id].length } Likes</Button>
                                 </OverlayTrigger>
 
-                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] === undefined ? 0 : this.props.comments[post.id].length } Comments</Button>
+                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] === undefined ? ' ' : this.props.comments[post.id].length } Comments</Button>
                                 {            
                                     (() => {
                                         if(this.state.selectedPost != null && this.state.selectedPost.id === post.id){
@@ -226,4 +253,4 @@ class Feed extends React.Component {
     }
 }
 
-export default connect(mapStateToProps)(Feed);
+export default connect(mapStateToProps, mapDispatchToProp)(Feed);
