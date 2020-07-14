@@ -4,7 +4,7 @@ import News from './NewsComponet';
 import Profile from './ProfileComponent';
 import { Link, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { postTweet, postComment, postLike } from '../redux/ActionCreator';
+import { fetchPosts, postTweet, postComment, postLike } from '../redux/ActionCreator';
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 const mapStateToProps = state => {
@@ -16,6 +16,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProp = (dispatch) => ({
+    fetchPosts: () => dispatch(fetchPosts()),
     postTweet: (tweet, username, name) => dispatch(postTweet(tweet, username, name)),
     postComment: (userID, postID, comment, name, username) => dispatch(postComment(userID, postID, comment, name, username)),
     postLike: (userID, postID) => dispatch(postLike(userID, postID))
@@ -46,6 +47,10 @@ class Main extends React.Component {
             selectedPost: null,
             selectedPostFunc: (val) => {this.setState({ selectedPost: val})}
         };
+    }
+
+    componentDidMount() {
+        this.props.fetchPosts();
     }
 
     renderSidebar() {
