@@ -1,25 +1,23 @@
 import { COMMENTS } from '../shared/comments';
 import * as ActionTypes from './ActionTypes';
+import produce from 'immer';
 
-export const Comments = (state = COMMENTS, action) => {
-    switch(action.type) {
+export const Comments = produce((draft = COMMENTS, action) => {
+    switch(action.type){
         case ActionTypes.POST_COMMENT:
             var comment = action.payload;
-            var newState = {...state};
-            if(newState[comment.postID] === undefined){
+            if(draft[comment.postID] === undefined){
                 var x = comment.postID;
                 comment.id = 0;
-                newState[x] = [ comment ];
-                console.log(newState);
-                return {...newState};
+                draft[x] = [ comment ];
+                return draft;
             } else {
-                comment.id = newState[comment.postID].length;
-                newState[comment.postID].push(comment);
-                console.log(newState);
-                return {...newState};
+                comment.id = draft[comment.postID].length;
+                draft[comment.postID].push(comment);
+                return draft;
             }
-
+    
         default:
-            return state;
+            return draft;
     }
-}
+});

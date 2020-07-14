@@ -205,11 +205,11 @@ class Feed extends React.Component {
                                 </LocalForm>
                             </CardBody>
                         </Card>
-                        {/* <StyleRoot> */}
-                        <div style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeIn, 'fadeIn')}}>
-                            {feed}
-                        </div>
-                        {/* </StyleRoot> */}
+                        <StyleRoot>
+                            <div style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeIn, 'fadeIn')}}>
+                                {feed}
+                            </div>
+                        </StyleRoot>
                     </div>
                 </React.Fragment>
             );

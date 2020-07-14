@@ -1,30 +1,38 @@
 import * as ActionTypes from './ActionTypes';
+import produce from 'immer';
 
-export const Posts = (state = {
-        isLoading: true,
-        errMess: null,
-        posts: []
-    }, action) => {
+export const Posts = produce((draft = {
+    isLoading: true,
+    errMess: null,
+    posts: []
+}, action) => {
     switch(action.type){
-
         case ActionTypes.POST_LOADING:
-            return {...state, errMess: null, isLoading: true, posts: []}
+            draft.isLoading = true;
+            draft.errMess = null;
+            draft.posts = [];
+            return draft;
 
         case ActionTypes.POST_FAILED:
-            return {...state, isLoading: false, errMess: action.payload, posts: []}
+            draft.isLoading = false;
+            draft.errMess = action.payload;
+            draft.posts = [];
+            return draft;
 
         case ActionTypes.POST_SUCCESS:
-            return {...state, isLoading: false, errMess: null, posts: action.payload}
+            draft.isLoading = false;
+            draft.errMess = null;
+            draft.posts = action.payload;
+            return draft;
 
-        case ActionTypes.POST_TWEET:
+        case ActionTypes.POST_TWEET:    
             var post = action.payload;
             post.comments = [];
-            var newState = {...state};
-            post.id = newState.posts.length;
-            newState.posts.unshift(post);
-            return newState;
+            post.id = draft.posts.length;
+            draft.posts.unshift(post);
+            return draft;
     
         default:
-            return state;
+            return draft;
     }
-}
+});

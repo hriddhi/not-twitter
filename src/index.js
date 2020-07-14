@@ -5,6 +5,9 @@ import 'font-awesome/css/font-awesome.min.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { enableAllPlugins } from "immer"
+
+enableAllPlugins();
 
 ReactDOM.render(
   <React.StrictMode>
