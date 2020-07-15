@@ -7,7 +7,8 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 import { fadeInDown, fadeIn } from 'react-animations';
 import Radium, { StyleRoot } from 'radium'
 import { fetchComments } from '../redux/ActionCreator';
-import "react-perfect-scrollbar/dist/css/styles.css";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const required = (val) => val && val.length;
 
@@ -124,8 +125,8 @@ class Feed extends React.Component {
                         if(this.props.comments[post.id] === undefined && this.props.comments.isLoading){
                             return (
                                 <React.Fragment>
-                                    <div style={{height: 130}}>
-                                        <div style={{width: 50, height: 50, paddingTop: 50,  margin: "0 auto"}}>
+                                    <div style={{height: 100}}>
+                                        <div style={{width: 50, height: 50, paddingTop: 32,  margin: "0 auto"}}>
                                             <Spinner animation="border" variant="dark" />
                                         </div>
                                     </div>
@@ -194,7 +195,8 @@ class Feed extends React.Component {
                             </div>
                             
                             <CardFooter className="p-1 m-0 bg-light">
-                                <OverlayTrigger placement="top" delay={{ show: 100, hide: 100 }} overlay={<Tooltip id="button-tooltip"> 
+                                <OverlayTrigger placement="top" delay={{ show: 100, hide: 100 }} overlay={
+                                    <Tooltip id="button-tooltip"> 
                                     { 
                                         (() => { 
                                             if(this.props.likes[post.id] === undefined) 
@@ -205,7 +207,7 @@ class Feed extends React.Component {
                                     }
                                     {this.props.likes[post.id] !== undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
                                     </Tooltip>}>
-                                    <Button id="Popover" type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm">
+                                    <Button type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm">
                                         <span style={{paddingRight: 4, color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) return "red"; else return "grey"})()}} className="fa fa-heart"></span>
                                         { this.props.likes[post.id] === undefined ? 0 : this.props.likes[post.id].length } Likes
                                     </Button>
@@ -244,7 +246,7 @@ class Feed extends React.Component {
                 <React.Fragment>
                     {this.renderNavbar()}
                     <div style={{width: 100+'%'}}>
-                        <Card onMouseLeave={() => {this.setState({ errorVisible: '' })}} onMouseEnter={() => {this.setState({ errorVisible: 'Required' })}} style={{margin:10}}>
+                        <Card style={{margin:10}}>
                             <CardBody className="p-0">
                                 <LocalForm onSubmit={(values) => this.handleTweetSubmit(values, this.props.user)}>
                                     <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
@@ -261,13 +263,14 @@ class Feed extends React.Component {
                                     
                                     <CardFooter className="p-1 m-0 bg-light">
                                         <Button onClick={() => {this.setState({ errorVisible: 'Required' })}} type="submit" className="mr-1" color="light" size="sm">Post</Button> 
-                                        <span className="font-weight-light small m-1" style={{float: "right"}}> { this.state.tweetCharCount ? 'Character Remaining: ' + (256 - this.state.tweetCharCount) : '' } <strong><Errors className="text-danger" model=".tweet" show="touched" messages={{required: this.state.errorVisible}} /></strong> </span>
+                                        <span className="font-weight-light small m-1" style={{float: "right"}}>
+                                            { this.state.tweetCharCount ? <div style={{height: 25, width: 25}}><CircularProgressbar strokeWidth={16} maxValue={256} value={this.state.tweetCharCount} text={this.state.tweetCharCount} styles={{textSize: '30px'}} /></div> : null} <strong><Errors className="text-danger" model=".tweet" show="touched" messages={{required: this.state.errorVisible}} /></strong> </span>
                                     </CardFooter> 
                                 </LocalForm>
                             </CardBody>
                         </Card>
                         <StyleRoot>
-                            <div style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeIn, 'fadeIn')}}>
+                            <div onClick={() => { if(this.state.errorVisible) this.setState({errorVisible: false}) }} style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeIn, 'fadeIn')}}>
                                 {feed}
                             </div>
                         </StyleRoot>

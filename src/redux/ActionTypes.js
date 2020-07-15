@@ -1,3 +1,11 @@
+export const REGISTER_USER = "REGISTER_USER";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAILED = "REGISTER_FAILED";
+
+export const LOGIN_USER = "LOGIN_USER";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILED = "LOGIN_FAILED";
+
 export const POST_LOADING = 'POST_LOADING';
 export const POST_FAILED = 'POST_FAILED';
 export const POST_SUCCESS = 'POST_SUCCESS';

@@ -1,6 +1,73 @@
 import * as ActionTypes from './ActionTypes';
 import { POSTS } from '../shared/posts';
 import { COMMENTS } from '../shared/comments';
+import axios from 'axios';
+
+
+export const loginUser = (user) => (dispatch) => {
+    dispatch(loginLoading());
+
+    axios.post('http://localhost:3001/login', {
+        username: user.username,
+        password: user.password
+    })
+    .then(res => {
+        console.log(res);
+        dispatch(loginSuccess(res.data));
+    })
+    .catch(err => {
+        console.log(err);
+        dispatch(loginFailed());
+    });
+};
+
+export const loginLoading = () => ({
+    type: ActionTypes.REGISTER_USER
+});
+
+export const loginSuccess = (res) => ({
+    type: ActionTypes.REGISTER_SUCCESS,
+    payload: res
+});
+
+export const loginFailed = () => ({
+    type: ActionTypes.REGISTER_FAILED
+});
+
+//================================================
+
+export const registerUser = (user) => (dispatch) => {
+    dispatch(registerLoading());
+
+    axios.post('http://localhost:3001/signup', {
+        username: user.username,
+        password: user.password,
+        name: user.name,
+        dob: user.dob
+    })
+    .then(res => {
+        console.log(res);
+        dispatch(registerSuccess());
+    })
+    .catch(err => {
+        console.log(err);
+        dispatch(registerFailed());
+    });
+};
+
+export const registerLoading = () => ({
+    type: ActionTypes.REGISTER_USER
+});
+
+export const registerSuccess = () => ({
+    type: ActionTypes.REGISTER_SUCCESS
+});
+
+export const registerFailed = () => ({
+    type: ActionTypes.REGISTER_FAILED
+});
+
+//====================================================
 
 export const fetchPosts = () => (dispatch) => {
     dispatch(postLoading(true));

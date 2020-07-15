@@ -37,8 +37,18 @@ class Main extends React.Component {
         };
     }
 
+    componentWillMount(){    
+        if(true){
+            return <Redirect to="/register" />;
+        } else {
+            return <Redirect to="/register" />;
+        }
+    }
+
     componentDidMount() {
         this.props.fetchPosts();
+        console.log("Componentdidmount");
+        
     }
 
     renderSidebar() {
@@ -72,9 +82,7 @@ class Main extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Switch>
-                    <Redirect to="/home" />
-                </Switch>
+                
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-1 col-md-1 p-0 d-none d-md-block d-lg-block" style={{}}> 
@@ -83,7 +91,7 @@ class Main extends React.Component {
                         <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
                             <Switch>
                                 <Route path="/home" component={() => <Feed postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} user={this.state.user} />}/>
-                                <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>
+                                <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>  
                             </Switch>
                         </div>
                         <div className="col-lg-4 p-0 d-none d-lg-block ">
