@@ -3,6 +3,7 @@ import produce from 'immer';
 
 export const Posts = produce((draft = {
     isLoading: true,
+    isPosting: null,
     errMess: null,
     posts: []
 }, action) => {
@@ -30,6 +31,11 @@ export const Posts = produce((draft = {
             post.comments = [];
             post.id = draft.posts.length;
             draft.posts.unshift(post);
+            draft.isPosting = post.id;
+            return;
+
+        case ActionTypes.POST_TWEET_SUCCESS:
+            draft.isPosting = null;
             return;
     
         default:

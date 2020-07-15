@@ -52,7 +52,15 @@ export const commentsSuccess = (comments, id) => ({
 
 //===============================================================
 
-export const postTweet = (tweet, username, name) => ({
+export const postTweet = (tweet, username, name) => (dispatch) => {
+    dispatch(postTweetLocal(tweet, username, name));
+
+    setTimeout(() => {
+        dispatch(postTweetSuccess());
+    }, 2000);
+}
+
+export const postTweetLocal = (tweet, username, name) => ({
     type: ActionTypes.POST_TWEET,
     payload: {
         tweet: tweet,
@@ -60,6 +68,19 @@ export const postTweet = (tweet, username, name) => ({
         name: name
     }
 });
+
+export const postTweetSuccess = () => ({
+    type: ActionTypes.POST_TWEET_SUCCESS
+});
+
+export const postTweetFailed = (errmess) => ({
+    type: ActionTypes.POST_TWEET_FAILED,
+    payload: errmess
+});
+
+
+
+//===============================================================
 
 export const postComment = (userID, postID, comment, name, username) => ({
     type: ActionTypes.POST_COMMENT,
