@@ -10,9 +10,9 @@ import { enableAllPlugins } from "immer"
 enableAllPlugins();
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <App />
-  </React.StrictMode>,
+  </>,
   document.getElementById('root')
 );
 

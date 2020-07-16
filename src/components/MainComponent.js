@@ -2,54 +2,27 @@ import React from 'react';
 import Feed from './FeedComponent';
 import News from './NewsComponet';
 import Profile from './ProfileComponent';
+import Registration from './RegistrationComponent';
+import Login from './LoginComponent';
 import { Link, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchPosts, postTweet, postComment, postLike } from '../redux/ActionCreator';
+import { postTweet, postComment, postLike } from '../redux/ActionCreator';
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 const mapDispatchToProp = (dispatch) => ({
-    fetchPosts: () => dispatch(fetchPosts()),
     postTweet: (tweet, username, name) => dispatch(postTweet(tweet, username, name)),
     postComment: (userID, postID, comment, name, username) => dispatch(postComment(userID, postID, comment, name, username)),
     postLike: (userID, postID) => dispatch(postLike(userID, postID))
-})
+});
+
+const mapStateToProps = state => {
+    return {
+        login: state.login,
+        session: state.session
+    }
+};
 
 class Main extends React.Component {
-
-    constructor(props){
-        super(props);
-
-        this.state = {
-            auth: true,
-            user: {
-                id: '69',
-                name: 'Hriddhi Mondal',
-                username: 'hriddhi1990',
-                profile_picture: null,
-                location: 'Howrah, India',
-                dob: 'July 23, 1999',
-                joined: 'August 2013',
-                link: 'https://youtube.com/c/TechFreak01',
-                tweet_id: ['1','2'],
-                commented_id: ['3'],
-                liked_id: ['76','98','34','1','2']
-            },
-        };
-    }
-
-    componentWillMount(){    
-        if(true){
-            return <Redirect to="/register" />;
-        } else {
-            return <Redirect to="/register" />;
-        }
-    }
-
-    componentDidMount() {
-        this.props.fetchPosts();
-        console.log("Componentdidmount");
-        
-    }
 
     renderSidebar() {
         return (
@@ -61,7 +34,7 @@ class Main extends React.Component {
                     <Link to="/home" ><i className="fa fa-home fa-2x"></i></Link>
                 </div>
                 <div className="p-3">
-                    <Link to="/profile"><i className="fa fa-user-circle fa-2x"></i></Link>
+                    <Link to={"/profile/" + this.props.session.user.username }><i className="fa fa-user-circle fa-2x"></i></Link>
                 </div>
                 <div className="p-3">
                     <a href="/"><i className="fa fa-rocket fa-2x"></i></a>
@@ -82,27 +55,47 @@ class Main extends React.Component {
     render() {
         return (
             <React.Fragment>
-                
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-1 col-md-1 p-0 d-none d-md-block d-lg-block" style={{}}> 
-                            {this.renderSidebar()}
-                        </div>
-                        <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
-                            <Switch>
-                                <Route path="/home" component={() => <Feed postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} user={this.state.user} />}/>
-                                <Route exact path="/profile" component={() => <Profile user={this.state.user}/>}/>  
-                            </Switch>
-                        </div>
-                        <div className="col-lg-4 p-0 d-none d-lg-block ">
-                            <News />
-                        </div>
-                    </div>
-                </div>
-                {this.renderFooter()}
+                {
+                    (() => {
+                        if(this.props.session.session){
+                            return (
+                                <React.Fragment>
+                                <div className="container">
+                                    <div className="row">
+                                        <div className="col-lg-1 col-md-1 p-0 d-none d-md-block d-lg-block" style={{}}> 
+                                            {this.renderSidebar()}
+                                        </div>
+                                        <div className="col-md-11 col-lg-7 p-0" style={{border: "solid", borderBottomWidth: 0, borderTopWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#cfcfcf"}}>
+                                            <Switch>
+                                                <Route path="/home" component={() => <Feed postTweet={this.props.postTweet} postComment={this.props.postComment} postLike={this.props.postLike} />}/>
+                                                <Route exact path="/profile/:username" component={(props) => <Profile {...props}/>}/>  
+                                            </Switch>
+                                        </div>
+                                        <div className="col-lg-4 p-0 d-none d-lg-block ">
+                                            <News />
+                                        </div>
+                                    </div>
+                                </div>
+                                {this.renderFooter()}
+                                <Redirect to='/home' />
+                                </React.Fragment>
+                            );
+                        } else {
+                            return (
+                                <React.Fragment>
+                                    <Switch>
+                                        <Route exact path="/login" component={() => <Login />}/>
+                                        <Route exact path="/register" component={() => <Registration />}/>
+                                    </Switch>
+                                    <Redirect to="/login"/>
+                                </React.Fragment>
+                            );
+                        }
+                    })()
+                }
             </React.Fragment>
         )
     }
 }
 
-export default withRouter(connect(null, mapDispatchToProp)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProp)(Main));

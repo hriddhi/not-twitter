@@ -6,13 +6,14 @@ import { OverlayTrigger, Tooltip, Image, Spinner } from 'react-bootstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { fadeInDown, fadeIn } from 'react-animations';
 import Radium, { StyleRoot } from 'radium'
-import { fetchComments } from '../redux/ActionCreator';
+import { fetchPosts, fetchComments } from '../redux/ActionCreator';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const required = (val) => val && val.length;
 
 const mapDispatchToProp = (dispatch) => ({
+    fetchPosts: () => dispatch(fetchPosts()),
     fetchComments: (id) => dispatch(fetchComments(id))
 });
 
@@ -20,7 +21,8 @@ const mapStateToProps = state => {
     return {
         posts: state.posts,
         comments: state.comments,
-        likes: state.likes
+        likes: state.likes,
+        user: state.session.user
     }
 };
 
@@ -44,6 +46,16 @@ class Feed extends React.Component {
         this.togglePopOver = this.togglePopOver.bind(this);
     }
 
+    componentDidMount() {
+        if(!this.props.posts.isLoading)
+            this.props.fetchPosts();
+    }
+
+    componentDidUpdate() {
+        console.log("componentDidUpdate");
+        //this.props.fetchPosts();
+    } 
+
     togglePopOver(){
         this.setState({
             popoverOpen: !this.state.popoverOpen
@@ -66,13 +78,14 @@ class Feed extends React.Component {
         });
     }
 
-    handleTweetLike(user, post){
-        this.props.postLike(post.id, user.id);
+    handleTweetLike(post, user){
+        console.log(post);
+        this.props.postLike(user.username, post.id);
     }
 
     handleTweetSubmit(values, user){
         var tweet = values.tweet;
-        this.props.postTweet(tweet.slice(0,256), user.username, user.name);
+        this.props.postTweet(tweet.slice(0,256));
         //this.props.feedScrollFunc(window.pageYOffset);
     }
 
@@ -84,7 +97,6 @@ class Feed extends React.Component {
     renderComment(post) {
             
             var comments = null;
-            console.log(this.props.comments[post.id] !== undefined);
             if(this.props.comments[post.id] !== undefined){
                 comments = this.props.comments[post.id].map((comment) => {
                     return (    
@@ -202,13 +214,13 @@ class Feed extends React.Component {
                                             if(this.props.likes[post.id] === undefined) 
                                                 return 'No Likes'; 
                                             else
-                                                return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{"User : " + user}</p>);
+                                                return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{user}</p>);
                                         })()
                                     }
                                     {this.props.likes[post.id] !== undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
                                     </Tooltip>}>
                                     <Button type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm">
-                                        <span style={{paddingRight: 4, color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.id)) return "red"; else return "grey"})()}} className="fa fa-heart"></span>
+                                        <span style={{paddingRight: 4, color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.username)) return "red"; else return "grey"})()}} className="fa fa-heart"></span>
                                         { this.props.likes[post.id] === undefined ? 0 : this.props.likes[post.id].length } Likes
                                     </Button>
                                 </OverlayTrigger>
@@ -232,7 +244,7 @@ class Feed extends React.Component {
             return (
                 <React.Fragment>
                     {this.renderNavbar()}
-                    <div style={{height: 500}}>
+                    <div style={{height: 600}}>
                         <div style={{width: 50, height: 50, paddingTop: 150,  margin: "0 auto"}}>
                             <Spinner animation="border" variant="primary" />
                         </div>

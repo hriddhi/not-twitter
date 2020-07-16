@@ -2,7 +2,7 @@ import * as ActionTypes from './ActionTypes';
 import produce from 'immer';
 
 export const Posts = produce((draft = {
-    isLoading: true,
+    isLoading: false,
     isPosting: null,
     errMess: null,
     posts: []

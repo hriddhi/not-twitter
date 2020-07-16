@@ -13,7 +13,8 @@ export const loginUser = (user) => (dispatch) => {
     })
     .then(res => {
         console.log(res);
-        dispatch(loginSuccess(res.data));
+        dispatch(loginSuccess());
+        dispatch(createSession(res.data));
     })
     .catch(err => {
         console.log(err);
@@ -22,17 +23,21 @@ export const loginUser = (user) => (dispatch) => {
 };
 
 export const loginLoading = () => ({
-    type: ActionTypes.REGISTER_USER
+    type: ActionTypes.LOGIN_USER
 });
 
-export const loginSuccess = (res) => ({
-    type: ActionTypes.REGISTER_SUCCESS,
-    payload: res
+export const loginSuccess = () => ({
+    type: ActionTypes.LOGIN_SUCCESS
 });
 
 export const loginFailed = () => ({
-    type: ActionTypes.REGISTER_FAILED
+    type: ActionTypes.LOGIN_FAILED
 });
+
+export const createSession = (data) => ({
+    type: ActionTypes.CREATE_SESSION,
+    payload: data
+})
 
 //================================================
 
@@ -67,9 +72,41 @@ export const registerFailed = () => ({
     type: ActionTypes.REGISTER_FAILED
 });
 
+//================================================
+
+export const fetchProfile = (username) => (dispatch, getState) => {
+    dispatch(fetchProfileLoading());
+
+    axios.get('http://localhost:3001/profile/' + username,  {
+        headers: {
+            'Authorization': 'Bearer ' + getState().session.token
+        }
+    })
+    .then(res => {
+        dispatch(fetchProfileSuccess(res.data));
+    })
+    .catch(err => {
+        console.log(err);
+        dispatch(fetchProfileFailed(err));
+    });
+}
+
+export const fetchProfileLoading = () => ({
+    type: ActionTypes.PROFILE_LOADING
+});
+
+export const fetchProfileSuccess = (res) => ({
+    type: ActionTypes.PROFILE_SUCCESS,
+    payload: res
+});
+
+export const fetchProfileFailed = (err) => ({
+    type: ActionTypes.PROFILE_FAILED
+});
+
 //====================================================
 
-export const fetchPosts = () => (dispatch) => {
+export const fetchPosts = () => (dispatch, getState) => {
     dispatch(postLoading(true));
 
     setTimeout(() => {
@@ -119,8 +156,21 @@ export const commentsSuccess = (comments, id) => ({
 
 //===============================================================
 
-export const postTweet = (tweet, username, name) => (dispatch) => {
-    dispatch(postTweetLocal(tweet, username, name));
+export const postTweet = (tweet) => (dispatch, getState) => {
+    dispatch(postTweetLocal(tweet));
+
+    axios.post('http://localhost:3001/home/post', { tweet }, {
+        headers: {
+            'Authorization': 'Bearer ' + getState().session.token
+        }
+    })
+    .then(res => {
+        console.log(res);
+    })
+    .catch(err => {
+        console.log(err);
+        dispatch(postTweetFailed());
+    });
 
     setTimeout(() => {
         dispatch(postTweetSuccess());
