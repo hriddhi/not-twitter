@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import  { Row, Card, CardText, CardBody, CardTitle, Button, CardFooter, ListGroup, ListGroupItem,
         InputGroupAddon, InputGroup, Navbar, NavbarBrand } from 'reactstrap';
 import { OverlayTrigger, Tooltip, Image, Spinner } from 'react-bootstrap';
@@ -30,8 +31,6 @@ class Feed extends React.Component {
 
     constructor(props) {
         super(props);
-
-        console.log('Constructor Called');
     
         this.state = {
             tweetCharCount: 0,
@@ -52,7 +51,6 @@ class Feed extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate");
         //this.props.fetchPosts();
     } 
 
@@ -63,13 +61,13 @@ class Feed extends React.Component {
     }
 
     onPostSelect(post){
-        if(this.props.comments[post.id] === undefined && !this.props.comments.isLoading)
-            this.props.fetchComments(post.id);
+        if(this.props.comments.comments[post._id] === undefined && !this.props.comments.isLoading)
+            this.props.fetchComments(post._id);
         
-        if(this.state.selectedPost === post)
+        if(this.state.selectedPost === post._id)
             this.setState({ selectedPost: null });
         else
-            this.setState({ selectedPost: post });
+            this.setState({ selectedPost: post._id });
     }
 
     countChars(event){
@@ -79,8 +77,7 @@ class Feed extends React.Component {
     }
 
     handleTweetLike(post, user){
-        console.log(post);
-        this.props.postLike(user.username, post.id);
+        this.props.postLike(post._id);
     }
 
     handleTweetSubmit(values, user){
@@ -89,27 +86,26 @@ class Feed extends React.Component {
         //this.props.feedScrollFunc(window.pageYOffset);
     }
 
-    handleCommentSubmit(values, user, post){
-        this.props.postComment(user.id, post.id, values.comment, user.name, user.username);
+    handleCommentSubmit(values, post){
+        this.props.postComment(post._id, values.comment);
         //this.props.feedScrollFunc(window.pageYOffset);
     }
 
     renderComment(post) {
-            
             var comments = null;
-            if(this.props.comments[post.id] !== undefined){
-                comments = this.props.comments[post.id].map((comment) => {
+            if(this.props.comments.comments[post._id] !== undefined){
+                comments = this.props.comments.comments[post._id].map((comment) => {
                     return (    
                         <StyleRoot>
-                            <div  key={post.id + "_" + comment.id + "_comment"} style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
+                            <div  key={comment._id} style={{animation: 'x 0.8s', animationName: Radium.keyframes(fadeInDown, 'fadeInDown')}}>
                                 <ListGroupItem className="p-2">
                                     <div className="row m-0">
                                         <div className="col-1 m-0 p-0">
                                             <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                         </div>
                                         <div className="col-11">
-                                            <CardTitle className="mb-1"><strong>{comment.name} </strong><span className="font-weight-light">@{post.username}</span></CardTitle>
-                                            <CardText>{comment.comment}</CardText>
+                                            <CardTitle className="mb-1"><strong>{comment.user.name} </strong><span className="font-weight-light">@{comment.user.username}</span></CardTitle>
+                                            <CardText>{comment.tweet}</CardText>
                                         </div>
                                     </div>
                                 </ListGroupItem>    
@@ -120,21 +116,19 @@ class Feed extends React.Component {
             }
         
         return (
-            <div key={post.id+"_comment_section"} className="pl-1 pr-1 pb-1 pt-0">
-                <LocalForm onSubmit={(values) => this.handleCommentSubmit(values, this.props.user, post)}>
+            <div key={post._id+"_comment_section"} className="pl-1 pr-1 pb-1 pt-0">
+                <LocalForm onSubmit={(values) => this.handleCommentSubmit(values, post)}>
                     <InputGroup className="pt-1">
                         <Control.text model=".comment" name="comment" id="comment" className="form-control" />
                         <InputGroupAddon addonType="append">
                             <Button type="submit" className="pr-3 pl-3" color="secondary" size="sm">Post</Button>
-                            
                         </InputGroupAddon>
                     </InputGroup>
                 </LocalForm>
                 <ListGroup className="pt-1"> 
                 {   
                     (() => {
-                        console.log(this.props.comments[post.id] + " " + post.id);
-                        if(this.props.comments[post.id] === undefined && this.props.comments.isLoading){
+                        if(this.props.comments[post._id] === undefined && this.props.comments.isLoading){
                             return (
                                 <React.Fragment>
                                     <div style={{height: 100}}>
@@ -144,7 +138,7 @@ class Feed extends React.Component {
                                     </div>
                                 </React.Fragment>
                             )
-                        } else if(this.props.comments[post.id] === undefined && this.props.comments.errMess){
+                        } else if(this.props.comments[post._id] === undefined && this.props.comments.errMess){
                             return <h4>{this.props.posts.errMess}</h4>;
                         } else {
                             return comments;
@@ -166,7 +160,8 @@ class Feed extends React.Component {
 
     render() {
         const feed = this.props.posts.posts.map((post) => {
-            if(this.props.posts.isPosting === post.id){
+            var like = post.like;
+            if(this.props.posts.isPosting === post._id){
                 return (
                     <div style={{position: "relative"}}>
                         <div style={{position: "absolute", left: 48+"%", top: 40+"%"}}>
@@ -179,7 +174,7 @@ class Feed extends React.Component {
                                         <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                     </div>
                                     <div className="col-11">
-                                        <CardTitle className="mb-1 d-inline"><strong>{post.name} </strong><span className="font-weight-light">@{post.username}</span> </CardTitle><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}>Date</small>
+                                        <CardTitle className="mb-1 d-inline"><strong>{post.name} </strong><span className="font-weight-light">@{post.username}</span> </CardTitle><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}> Date</small>
                                         <CardText style={{textAlign: "justify"}}>{post.tweet}</CardText>
                                     </div>
                                 </div>
@@ -193,7 +188,7 @@ class Feed extends React.Component {
                 );
             } else
             return (
-                <div key={post.id + "-post"} style={{width: 100+"%"}}>
+                <div key={post._id} style={{width: 100+"%"}}>
                     <Card style={{margin: 10}}>
                         <CardBody className="p-0">
                             <div className="row m-0 p-2">
@@ -201,7 +196,7 @@ class Feed extends React.Component {
                                     <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                 </div>
                                 <div className="col-11">
-                                    <CardTitle className="mb-1 d-inline"><strong>{post.name} </strong><span className="font-weight-light">@{post.username}</span> </CardTitle><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}>Date</small>
+                                    <Link to={"/profile/" + post.user.username }><CardTitle className="mb-1 d-inline"><strong>{post.user.name} </strong><span className="font-weight-light">@{post.user.username}</span> </CardTitle></Link><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}>{new Date(post.createdAt).toISOString().substring(0,10)}</small>
                                     <CardText style={{textAlign: "justify"}}>{post.tweet}</CardText>
                                 </div>
                             </div>
@@ -211,29 +206,29 @@ class Feed extends React.Component {
                                     <Tooltip id="button-tooltip"> 
                                     { 
                                         (() => { 
-                                            if(this.props.likes[post.id] === undefined) 
+                                            if(post['like'].length === 0) 
                                                 return 'No Likes'; 
                                             else
-                                                return this.props.likes[post.id].slice(0,5).map((user) => <p className="p-0 m-0">{user}</p>);
+                                                return post['like'].slice(0,5).map((user) => <p className="p-0 m-0">{user.username}</p>);
                                         })()
                                     }
-                                    {this.props.likes[post.id] !== undefined && this.props.likes[post.id].length > 5 ? <p className="p-0 m-0">and {this.props.likes[post.id].length - 5} more ...</p> : null}
+                                    {post['like'].length !== 0 && post['like'].length > 5 ? <p className="p-0 m-0">and {post['like'].length - 5} more ...</p> : null}
                                     </Tooltip>}>
                                     <Button type="button"  onClick={() => this.handleTweetLike(post, this.props.user)} className="mr-1" color="light" size="sm">
-                                        <span style={{paddingRight: 4, color: (() =>{ if(this.props.likes[post.id] !== undefined && this.props.likes[post.id].includes(this.props.user.username)) return "red"; else return "grey"})()}} className="fa fa-heart"></span>
-                                        { this.props.likes[post.id] === undefined ? 0 : this.props.likes[post.id].length } Likes
+                                        <span style={{paddingRight: 4, color: (() =>{ if(post['like'].length !== 0 && post.like.findIndex((user) => user.userId === this.props.user._id) !== -1) return "red"; else return "grey"})()}} className="fa fa-heart"></span>
+                                        { post['like'].length } Likes
                                     </Button>
                                 </OverlayTrigger>
 
-                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments[post.id] === undefined ? ' ' : this.props.comments[post.id].length } Comments</Button>
+                                <Button color="light" size="sm" onClick={() => this.onPostSelect(post)}><span style={{color: "grey"}} className="fa fa-comment"></span> {this.props.comments.comments[post._id] === undefined ? ' ' : this.props.comments.comments[post._id].length } Comments</Button>
                                 {            
                                     (() => {
-                                        if(this.state.selectedPost != null && this.state.selectedPost.id === post.id){
+                                        if(this.state.selectedPost !== null && this.state.selectedPost === post._id){
                                             return this.renderComment(post);
                                         }
                                     })()
                                 }
-                            </CardFooter> 
+                            </CardFooter>
                         </CardBody>
                     </Card>
                 </div>

@@ -20,7 +20,6 @@ export const Profile = produce((draft = {
             draft.errMess = null;
             draft.data = action.payload.data;
             draft.user = action.payload.user
-            console.log(action.payload);
             return;
     
         default:

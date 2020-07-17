@@ -4,6 +4,7 @@ import produce from 'immer';
 export const Comments = produce((draft = 
     {
         isLoading: false,
+        isPosting: false,
         errMess: null,
         comments: {}
     }, action) => {
@@ -21,18 +22,30 @@ export const Comments = produce((draft =
         case ActionTypes.COMMENT_SUCCESS:
             draft.isLoading = false;
             draft.errMess = null;
-            draft[action.id] = action.payload;
+            if(action.payload[0] === undefined)
+                return;
+            draft.comments[action.payload[0].repliedTo] = action.payload;
             return;
 
-        case ActionTypes.POST_COMMENT:
+        case ActionTypes.POST_COMMENT_LOADING: 
+            draft.isPosting = true;
+            draft.errMess = null;
+            return;
+
+        case ActionTypes.POST_COMMENT_FAILED:
+            draft.isPosting = false;
+            draft.errMess = action.payload;
+            return;
+
+        case ActionTypes.POST_COMMENT_SUCCESS:
+            draft.isPosting = false;
+            draft.errMess = null;
             var comment = action.payload;
-            if(draft[comment.postID] === undefined){
-                comment.id = 0;
-                draft[comment.postID] = [ comment ];
+            if(draft.comments[comment.repliedTo] === undefined){
+                draft.comments[comment.repliedTo] = [ comment ];
                 return;
             } else {
-                comment.id = draft[comment.postID].length;
-                draft[comment.postID].push(comment);
+                draft.comments[comment.repliedTo].push(comment);
                 return;
             }
     

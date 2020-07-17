@@ -11,8 +11,8 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 
 const mapDispatchToProp = (dispatch) => ({
     postTweet: (tweet, username, name) => dispatch(postTweet(tweet, username, name)),
-    postComment: (userID, postID, comment, name, username) => dispatch(postComment(userID, postID, comment, name, username)),
-    postLike: (userID, postID) => dispatch(postLike(userID, postID))
+    postComment: (postID, comment) => dispatch(postComment(postID, comment)),
+    postLike: (postID) => dispatch(postLike(postID))
 });
 
 const mapStateToProps = state => {
@@ -97,5 +97,7 @@ class Main extends React.Component {
         )
     }
 }
+
+//<Redirect to="/login"/>
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProp)(Main));

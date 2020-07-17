@@ -20,6 +20,7 @@ class Registration extends React.Component {
             <div>
                 <LocalForm onSubmit={(values) => this.handleRegistration(values)}>
                     <Control.text model=".username" name="username" id="username" className="form-control" placeholder="Username" />
+                    <Control.text model=".email" name="email" id="email" className="form-control" placeholder="Email" />
                     <Control.text model=".password" name="password" id="password" className="form-control" placeholder="Password" />
                     <Control.text model=".name" name="name" id="dob" className="form-control" placeholder="name"/>
                     <Control.text model=".dob" name="dob" id="dob" className="form-control"placeholder="dob" />

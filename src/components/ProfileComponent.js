@@ -36,7 +36,6 @@ class Profile extends React.Component {
 
     render() {
         var feed = null;
-        console.log(this.props.posts);
         if(this.props.isLoading){
             return (
                 <React.Fragment>
@@ -61,7 +60,7 @@ class Profile extends React.Component {
                                         <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                     </div>
                                     <div className="col-11">
-                                        <CardTitle className="mb-1 d-inline"><strong>{this.props.user.name} </strong><span className="font-weight-light">@{this.props.user.username}</span> </CardTitle><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}>Date</small>
+                                        <CardTitle color="black" className="mb-1 d-inline"><strong>{this.props.user.name} </strong><span className="font-weight-light">@{this.props.user.username}</span> </CardTitle><small className="font-weight-light d-none d-md-inline d-lg-inline" style={{float: "right"}}>Date</small>
                                         <CardText style={{textAlign: "justify"}}>{post.tweet}</CardText>
                                     </div>
                                 </div>
@@ -73,7 +72,7 @@ class Profile extends React.Component {
         }
 
         return (
-            <div style={{height: 600}}>
+            <div>
                 {this.renderNavbar()}
                 <div className="container-fluid" style={{height: 120, backgroundColor: "#cfcfcf", position: "relative"}}>
                     <img src="https://f0.pngfuel.com/png/768/766/shin-chan-illustration-png-clip-art.png" alt="profile" className="img-thumbnail" style={{borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />

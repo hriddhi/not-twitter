@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes';
-import { POSTS } from '../shared/posts';
 import { COMMENTS } from '../shared/comments';
 import axios from 'axios';
 
@@ -12,12 +11,10 @@ export const loginUser = (user) => (dispatch) => {
         password: user.password
     })
     .then(res => {
-        console.log(res);
         dispatch(loginSuccess());
         dispatch(createSession(res.data));
     })
     .catch(err => {
-        console.log(err);
         dispatch(loginFailed());
     });
 };
@@ -51,11 +48,9 @@ export const registerUser = (user) => (dispatch) => {
         dob: user.dob
     })
     .then(res => {
-        console.log(res);
         dispatch(registerSuccess());
     })
     .catch(err => {
-        console.log(err);
         dispatch(registerFailed());
     });
 };
@@ -86,7 +81,6 @@ export const fetchProfile = (username) => (dispatch, getState) => {
         dispatch(fetchProfileSuccess(res.data));
     })
     .catch(err => {
-        console.log(err);
         dispatch(fetchProfileFailed(err));
     });
 }
@@ -109,9 +103,17 @@ export const fetchProfileFailed = (err) => ({
 export const fetchPosts = () => (dispatch, getState) => {
     dispatch(postLoading(true));
 
-    setTimeout(() => {
-        dispatch(postSuccess(POSTS));
-    }, 2000);
+    axios.get('http://localhost:3001/post/',  {
+        headers: {
+            'Authorization': 'Bearer ' + getState().session.token
+        }
+    })
+    .then(res => {
+        dispatch(postSuccess(res.data));
+    })
+    .catch(err => {
+        dispatch(postFailed(err));
+    });
 }
 
 export const postLoading = () => ({
@@ -130,17 +132,25 @@ export const postSuccess = (posts) => ({
 
 //===============================================================
 
-export const fetchComments = (id) => (dispatch) => {
-    dispatch(commentsLoading(id));
+export const fetchComments = (_id) => (dispatch, getState) => {
+    dispatch(commentsLoading(_id));
 
-    setTimeout(() => {
-        dispatch(commentsSuccess(COMMENTS[id],id));
-    }, 2000);
+    axios.get('http://localhost:3001/post/comment/' + _id,  {
+        headers: {
+            'Authorization': 'Bearer ' + getState().session.token
+        }
+    })
+    .then(res => {
+        dispatch(commentsSuccess(res.data));
+    })
+    .catch(err => {
+        dispatch(commentsFailed(err));
+    });
 }
 
-export const commentsLoading = (id) => ({
+export const commentsLoading = (_id) => ({
     type: ActionTypes.COMMENT_LOADING,
-    id: id
+    id: _id
 });
 
 export const commentsFailed = (errmess) => ({
@@ -148,42 +158,32 @@ export const commentsFailed = (errmess) => ({
     payload: errmess
 });
 
-export const commentsSuccess = (comments, id) => ({
+export const commentsSuccess = (comments) => ({
     type: ActionTypes.COMMENT_SUCCESS,
-    id: id,
     payload: comments
 });
 
 //===============================================================
 
 export const postTweet = (tweet) => (dispatch, getState) => {
-    dispatch(postTweetLocal(tweet));
 
-    axios.post('http://localhost:3001/home/post', { tweet }, {
+    axios.post('http://localhost:3001/post', { tweet }, {
         headers: {
             'Authorization': 'Bearer ' + getState().session.token
         }
     })
     .then(res => {
-        console.log(res);
+        dispatch(postTweetLocal(res.data));
+        dispatch(postTweetSuccess());
     })
     .catch(err => {
-        console.log(err);
-        dispatch(postTweetFailed());
+        dispatch(postTweetFailed(err));
     });
-
-    setTimeout(() => {
-        dispatch(postTweetSuccess());
-    }, 2000);
 }
 
-export const postTweetLocal = (tweet, username, name) => ({
+export const postTweetLocal = (res) => ({
     type: ActionTypes.POST_TWEET,
-    payload: {
-        tweet: tweet,
-        username: username,
-        name: name
-    }
+    payload: res
 });
 
 export const postTweetSuccess = () => ({
@@ -195,25 +195,69 @@ export const postTweetFailed = (errmess) => ({
     payload: errmess
 });
 
-
-
 //===============================================================
 
-export const postComment = (userID, postID, comment, name, username) => ({
-    type: ActionTypes.POST_COMMENT,
-    payload: {
-        userID: userID,
-        postID: postID,
-        comment: comment,
-        name: name,
-        username: username
-    }
+export const postComment = (postId, comment) => (dispatch, getState) => {
+
+    dispatch(postCommentLoading());
+
+    axios.post('http://localhost:3001/post/comment/' + postId, { comment }, {
+        headers: {
+            'Authorization': 'Bearer ' + getState().session.token
+        }
+    })
+    .then(res => {
+        dispatch(postCommentSuccess(res.data));
+    })
+    .catch(err => {
+        dispatch(postCommentFailed(err));
+    });
+}
+
+export const postCommentLoading = () => ({
+    type: ActionTypes.POST_COMMENT_LOADING
 });
 
-export const postLike = (userID, postID) => ({
-    type: ActionTypes.POST_LIKE,
-    payload: {
-        userID: userID,
-        postID: postID
-    }
+export const postCommentSuccess = (res) => ({
+    type: ActionTypes.POST_COMMENT_SUCCESS,
+    payload: res
+});
+
+export const postCommentFailed = (errmess) => ({
+    type: ActionTypes.POST_COMMENT_FAILED,
+    payload: errmess
+});
+
+//==================================================
+
+export const postLike = (postId) => (dispatch, getState) => {
+
+    dispatch(postLikeLoading());
+
+    axios.post('http://localhost:3001/post/like/' + postId, null , {
+        headers: {
+            'Authorization': 'Bearer ' + getState().session.token
+        }
+    })
+    .then(res => {
+        dispatch(postLikeSuccess(res.data, postId));
+    })
+    .catch(err => {
+        dispatch(postLikeFailed(err));
+    });
+}
+
+export const postLikeLoading = () => ({
+    type: ActionTypes.POST_LIKE_LOADING
+});
+
+export const postLikeSuccess = (res, postId) => ({
+    type: ActionTypes.POST_LIKE_SUCCESS,
+    payload: res,
+    postId: postId
+});
+
+export const postLikeFailed = (errmess) => ({
+    type: ActionTypes.POST_LIKE_FAILED,
+    payload: errmess
 });
