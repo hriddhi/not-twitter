@@ -1,9 +1,10 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createForms } from 'react-redux-form';
 import { Posts } from './posts';
 import { Comments } from './comments';
-import { Likes } from './likes';
 import { Register } from './registration';
 import { Login } from './login'
+import { Tweet } from './tweet';
 import { Session } from './session'
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
@@ -14,7 +15,7 @@ export const ConfigureStore = () => {
         combineReducers({
             posts: Posts,
             comments: Comments,
-            likes: Likes,
+            tweet: Tweet,
             profile: Profile,
             register: Register,
             login: Login,

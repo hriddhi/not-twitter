@@ -9,6 +9,70 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.comment:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.btton,
+.btton:active,
+.btton:visited,
+.btton:focus {
+    background: none;
+    border-color: #055f83;
+    border-style: solid;
+    color: #055f83;
+    border-radius: 30px;
+}
+
+.btton:hover{
+    background-color:  #055f83;
+    border-style: solid;
+    border-color: #055f83;
+    color: azure;
+}
+
+.btton_feed,
+.btton_feed:active,
+.btton_feed:visited,
+.btton_feed:focus {
+    background: none;
+    border-color: #0baceb00;
+    border-style: solid;
+    color: #055f83;
+    border-radius: 30px;
+}
+
+.btton_feed:hover{
+    background-color:  #055f83;
+    border-style: solid;
+    border-color: #06688f;
+    color: rgb(0, 0, 0);
+}
+
+.bttn,
+.bttn:active,
+.bttn:visited,
+.bttn:focus {
+    background: none;
+    color: #055f83;
+}
+.bttn:hover{
+    color: black;
+}
+
+.bttnx,
+.bttnx:active,
+.bttnx:visited,
+.bttnx:focus {
+    background: none;
+    color: #055f83;
+}
+
+.bttnx:hover{
+    color: black;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

@@ -26,34 +26,30 @@ export const Posts = produce((draft = {
             draft.posts = action.payload;
             return;
 
-        case ActionTypes.POST_TWEET:    
-            var post = action.payload;
-            draft.posts.unshift(post);
-            draft.isPosting = post.id;
+        case ActionTypes.POST_TWEET:
+            draft.isPosting = true;
             return;
 
         case ActionTypes.POST_TWEET_SUCCESS:
-            draft.isPosting = null;
+            draft.isPosting = false;
             draft.errMess = null;
+            draft.posts.unshift(action.payload);
             return;
 
         case ActionTypes.POST_TWEET_FAILED:
-            draft.isPosting = null;
+            draft.isPosting = false;
             draft.errMess = action.payload;
             return;
         
         case ActionTypes.POST_LIKE_LOADING: 
-            draft.isPosting = true;
             draft.errMess = null;
             return;
 
         case ActionTypes.POST_LIKE_FAILED:
-            draft.isPosting = false;
             draft.errMess = action.payload;
             return;
 
         case ActionTypes.POST_LIKE_SUCCESS:
-            draft.isPosting = false;
             draft.errMess = null;
             var i = draft.posts.findIndex((post) => action['postId'] === (post._id));
             draft.posts[i].like = action.payload;

@@ -24,7 +24,9 @@ export const Comments = produce((draft =
             draft.errMess = null;
             if(action.payload[0] === undefined)
                 return;
-            draft.comments[action.payload[0].repliedTo] = action.payload;
+            console.log(action.payload);
+            var id = action.payload[0].repliedTo.split('$');
+            draft.comments[id[0]] = action.payload;
             return;
 
         case ActionTypes.POST_COMMENT_LOADING: 
@@ -41,11 +43,12 @@ export const Comments = produce((draft =
             draft.isPosting = false;
             draft.errMess = null;
             var comment = action.payload;
-            if(draft.comments[comment.repliedTo] === undefined){
-                draft.comments[comment.repliedTo] = [ comment ];
+            var _id = comment.repliedTo.split('$');
+            if(draft.comments[_id[0]] === undefined){
+                draft.comments[_id[0]] = [ comment ];
                 return;
             } else {
-                draft.comments[comment.repliedTo].push(comment);
+                draft.comments[_id[0]].push(comment);
                 return;
             }
     

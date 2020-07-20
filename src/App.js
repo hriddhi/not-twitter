@@ -1,5 +1,5 @@
 import React from 'react';
-import Main from './components/MainComponent';
+import Router from './components/Router';
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -14,7 +14,7 @@ class App extends React.Component {
       return (
         <Provider store={store}>
           <BrowserRouter>
-            <Main />
+            <Router />
           </BrowserRouter>
         </Provider>
       );
