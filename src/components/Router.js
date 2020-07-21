@@ -26,7 +26,7 @@ class Router extends React.Component {
                         </React.Fragment>
                     );
                 else {
-                    return <Redirect to="/register"/>;
+                    return <Redirect to="/login"/>;
                 } 
                 })()
             }

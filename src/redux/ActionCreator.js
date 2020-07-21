@@ -37,6 +37,16 @@ export const createSession = (data) => ({
 
 //================================================
 
+export const logoutUser = () => (dispatch) => {
+    dispatch(deleteSession());
+};
+
+export const deleteSession = () => ({
+    type: ActionTypes.DELETE_SESSION
+})
+
+//================================================
+
 export const registerUser = (user) => (dispatch) => {
     dispatch(registerLoading());
 

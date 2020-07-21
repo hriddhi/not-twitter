@@ -36,16 +36,16 @@ class Registration extends React.Component {
                         <div className="card" style={{boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)"}}>
                             <div className="card-body p-0">
                                 <div className="row">
-                                    <div className="col col-5 p-0">
+                                    <div className="container-fluid p-3 d-inline" style={{width: 40+"%"}}>
                                         <div style={{position: "relative"}}>
-                                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="user_profile" className="pl-1 pt-1 pb-1 pr-1 ml-4 mt-3" style={{width: "75%" , borderRadius: "50%"}}/> 
+                                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="user_profile" className="p-1" style={{width: "100%" , borderRadius: "50%"}}/> 
                                             <div style={{position: "absolute", bottom: "8%", right: "10%"}}>
                                                 <button className="btn btn-secondary btn-sm p-0" style={{width: "30px", height: "30px", borderRadius: "50%", paddingTop: -4}}><small><i className="fa fa-edit"></i></small></button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col col-7">
-                                        <div className="ml-4 mr-4 pt-3 card-text">
+                                    <div className="container-fluid d-inline pl-0 ml-0" style={{width: 50+"%"}}>
+                                        <div className="pt-3 card-text">
                                             <div className="form-group">
                                                 <label for="registrationForm" style={{color:  "#055f83"}}><b>Username</b></label>
                                                 <div className="input-group">
@@ -67,7 +67,7 @@ class Registration extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="ml-4 mr-4 pt-3 card-text">
+                                <div className="ml-4 mr-4 pt-1 card-text">
                                     <div className="form-group">
                                         <label for="registrationForm" style={{color: "#055f83"}}><b>Name</b></label>
                                         <div className="form-row">

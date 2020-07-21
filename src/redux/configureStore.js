@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { createForms } from 'react-redux-form';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { Posts } from './posts';
 import { Comments } from './comments';
 import { Register } from './registration';
@@ -10,8 +11,14 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { Profile } from './profile';
 
-export const ConfigureStore = () => {
-    const store = createStore(
+const persistConfig = {
+    key: 'session',
+    storage: storage,
+    whitelist: ['session'] // which reducer want to store
+};
+
+const store = createStore(
+    persistReducer(persistConfig,
         combineReducers({
             posts: Posts,
             comments: Comments,
@@ -20,9 +27,11 @@ export const ConfigureStore = () => {
             register: Register,
             login: Login,
             session: Session
-        }),
-        applyMiddleware(thunk, logger)
-    );
+        })
+    ),
+    applyMiddleware(thunk, logger)
+);
 
-    return store;
-}
+const persistor = persistStore(store);
+
+export { persistor, store };

@@ -40,7 +40,7 @@ class Tweet extends React.Component {
                                         <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                     </div>
                                     <div onClick={() =>{ this.props.fetchTweet(comment._id+'$'+comment.user.username)}} className="col-11">
-                                        <CardTitle className="mb-1"><strong>{comment.user.name} </strong><span className="font-weight-light">@{comment.user.username}</span></CardTitle>
+                                        <CardTitle className="mb-1 d-inline"><strong>{comment.user.name} </strong><span className="font-weight-light">@{comment.user.username}</span></CardTitle>
                                         <small className="font-weight-light d-inline" style={{position: "absolute", right: 16}}>{ (new Date().getTime() - new Date(comment.createdAt).getTime())/(1000*3600*24) < 1 ? <Moment fromNow>{comment.createdAt}</Moment> : <Moment format="LT D, MMM">{comment.createdAt}</Moment>}</small>
                                         <CardText>{comment.tweet}</CardText>
                                     </div>

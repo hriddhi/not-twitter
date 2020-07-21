@@ -5,14 +5,15 @@ import Profile from './ProfileComponent';
 import Tweet from './TweetComponent';
 import { Link, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { postTweet, postComment, postLike, getUserSuggestion } from '../redux/ActionCreator';
+import { postTweet, postComment, postLike, getUserSuggestion, logoutUser } from '../redux/ActionCreator';
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 const mapDispatchToProp = (dispatch) => ({
     postTweet: (tweet, username, name) => dispatch(postTweet(tweet, username, name)),
     postComment: (postID, name, comment) => dispatch(postComment(postID, name, comment)),
     postLike: (postID) => dispatch(postLike(postID)),
-    getUserSuggestion: () => dispatch(getUserSuggestion())
+    getUserSuggestion: () => dispatch(getUserSuggestion()),
+    logoutUser: () => dispatch(logoutUser())
 });
 
 const mapStateToProps = state => {
@@ -37,7 +38,7 @@ class Main extends React.Component {
                     <Link to={"/profile/" + this.props.session.user.username }><i className="fa fa-user-circle fa-2x"></i></Link>
                 </div>
                 <div className="p-3">
-                    <a href="/"><i className="fa fa-rocket fa-2x"></i></a>
+                    <div onClick={()=> this.props.logoutUser()}><i className="fa fa-sign-out fa-2x" style={{cursor: "pointer", color: "blue"}}></i></div>
                 </div>
             </div>
         )

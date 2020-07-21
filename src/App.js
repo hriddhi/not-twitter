@@ -4,9 +4,7 @@ import './App.css';
 import { BrowserRouter } from 'react-router-dom';
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Provider } from 'react-redux';
-import { ConfigureStore } from './redux/configureStore';
-
-const store = ConfigureStore();
+import { store } from './redux/configureStore';
 
 class App extends React.Component {
 

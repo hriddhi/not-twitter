@@ -59,18 +59,6 @@ class Login extends React.Component {
                                                 <Control.text type="password" model=".password" name="password" id="password" className="form-control" placeholder="Enter Password"/>
                                             </div>    
                                         </div>
-
-                                        <div className="form-group form-check">
-                                            <div className="form-row">
-                                                <div className="col-12">
-                                                    <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-                                                    <label className="form-check-label" for="exampleCheck1" style={{color: "#055f83"}}> Keep me logged in</label>
-                                                </div>
-                                                {/* <div className="col-5 text-right">
-                                                    <a href="#">Forget Password?</a>
-                                                </div> */}
-                                            </div>    
-                                        </div>
                                     </div>
                                     <div className="form-group text-center">
                                         <button type="submit" className="btn btn-outline-primary btn-sm">Login</button>

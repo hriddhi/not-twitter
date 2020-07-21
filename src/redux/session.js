@@ -16,8 +16,8 @@ export const Session = produce((draft = {
             return;
 
         case ActionTypes.DELETE_SESSION:
-            draft.isLoading = false;
-            draft.errMess = null;
+            draft.session = false;
+            draft.token = null;
             return;
 
         case ActionTypes.FETCH_USER_SUGGESTION:
