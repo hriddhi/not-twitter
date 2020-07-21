@@ -4,6 +4,7 @@ import produce from 'immer';
 export const Session = produce((draft = {
     session: false,
     token: null,
+    user: null,
     errMess: null,
     user_suggestion: null
     }, action) => {
@@ -18,6 +19,8 @@ export const Session = produce((draft = {
         case ActionTypes.DELETE_SESSION:
             draft.session = false;
             draft.token = null;
+            draft.user_suggestion = null;
+            draft.user = null;
             return;
 
         case ActionTypes.FETCH_USER_SUGGESTION:

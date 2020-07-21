@@ -20,7 +20,6 @@ class Registration extends React.Component {
     }
 
     handleRegistration(values){
-        //alert(JSON.stringify(values));
         this.props.registerUser(values);
     }
 

@@ -14,7 +14,8 @@ import { Profile } from './profile';
 const persistConfig = {
     key: 'session',
     storage: storage,
-    whitelist: ['session'] // which reducer want to store
+    whitelist: ['session'],
+    blacklist: ['posts', 'comments', 'tweet', 'profile', 'register', 'login']
 };
 
 const store = createStore(

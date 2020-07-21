@@ -68,7 +68,7 @@ class Post extends React.Component {
                                 <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                             </div>
                             <div className="container ml-3" style={{width: 90+"%"}}>
-                                <CardTitle style={{marginLeft: -14, marginBottom: 8, display: "inline"}}><strong>{this.props.user.name}</strong> @<span className="font-weight-light">{this.props.user.username}</span></CardTitle>
+                                <CardTitle style={{marginLeft: -14, marginBottom: 8, display: "inline"}}><strong>{this.props.user.name}</strong><span className="font-weight-light"> @{this.props.user.username}</span></CardTitle>
                                 {this.state.tweetCharCount ? <Control.reset style={{backgroundColor: "rgb(255, 255, 255, 0)", color: "#000", position: "absolute", border: "none", padding: 0, marginTop: -4, right: 16}} model="post" type="reset"><i style={{padding: 5}} onClick={()=> {this.setState({tweetCharCount: 0})}} className="fa fa-times-circle"></i></Control.reset> : null }
                                 <Row className="form-group">
                                     <Control.textarea onChange={this.countChars} model=".tweet" name="tweet" id="tweet" className="form-control" validators={{required}}/>

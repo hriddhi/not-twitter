@@ -216,7 +216,7 @@ class Profile extends React.Component {
                                 return (
                                     <React.Fragment>
                                         <Modal.Header closeButton>
-                                            <Modal.Title>Followers</Modal.Title>
+                                            <Modal.Title>Following</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body style={{minHeight: 300}}>
                                             {user}
@@ -243,7 +243,7 @@ class Profile extends React.Component {
                                 return (
                                     <React.Fragment>
                                         <Modal.Header closeButton>
-                                            <Modal.Title>Following</Modal.Title>
+                                            <Modal.Title>Followers</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body style={{minHeight: 300}}>
                                             {user}
