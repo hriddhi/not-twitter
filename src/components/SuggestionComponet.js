@@ -30,7 +30,7 @@ class Suggest extends React.Component {
                 <ListGroupItem className="p-2" style={{border: "none", boxShadow: "0px 0px 0px white", border: "solid", borderWidth: "0 0 1px 0", borderColor: "#cfcfcf"}}>
                     <div className="row m-0">
                         <div className="m-0 mt-1 p-0 d-inline">
-                            <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                            <Image roundedCircle src={user.profile_picture} alt="profile" style={{maxWidth: 40}} />
                         </div>
                         <div className="d-inline ml-2">
                             <NavLink style={{color: "black"}} to={"/profile/" + user.username }><CardTitle className="mb-1 d-inline"><strong>{user.name} </strong> </CardTitle></NavLink>

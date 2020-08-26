@@ -12,6 +12,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import { fetchPosts, fetchComments, fetchTweet } from '../redux/ActionCreator';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import ImgsViewer from 'react-images-viewer';
 import 'react-circular-progressbar/dist/styles.css';
 
 const required = (val) => val && val.length;
@@ -38,9 +39,12 @@ class Post extends React.Component {
         this.state = {
             tweetCharCount: 0,
             errorVisible: false,
+            image: null,
+            file: null
         }
 
         this.handleTweetSubmit = this.handleTweetSubmit.bind(this);
+        this.handleImageChange = this.handleImageChange.bind(this);
         this.countChars = this.countChars.bind(this);
     }
 
@@ -52,10 +56,22 @@ class Post extends React.Component {
         )
     }
 
+    handleImageChange(event) {
+        this.setState({
+          image: URL.createObjectURL(event.target.files[0]),
+          file: event.target.files[0]
+        })
+    }
+
     handleTweetSubmit(values, user){
-        var tweet = values.tweet;
-        this.props.postTweet(tweet.slice(0,256));
-        //this.props.feedScrollFunc(window.pageYOffset);
+        var tweet = values.tweet.slice(0,256);
+
+        var formData = new FormData();
+        formData.append('tweet', tweet);
+        if(this.state.file !== null)
+            formData.append('image', this.state.file);
+
+        this.props.postTweet(formData);
     }
 
     render() {
@@ -65,7 +81,7 @@ class Post extends React.Component {
                     <LocalForm model="post" onSubmit={(values) => this.handleTweetSubmit(values, this.props.user)}>
                         <div className="row m-0 pt-2 pl-2 pr-2 pb-0">
                             <div className="d-none d-md-inline d-lg-inline m-0 mt-1 p-0">
-                                <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                <Image roundedCircle src={this.props.user.profile_picture} alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                             </div>
                             <div className="container ml-3" style={{width: 90+"%"}}>
                                 <CardTitle style={{marginLeft: -14, marginBottom: 8, display: "inline"}}><strong>{this.props.user.name}</strong><span className="font-weight-light"> @{this.props.user.username}</span></CardTitle>
@@ -78,6 +94,11 @@ class Post extends React.Component {
                         
                         <CardFooter style={{backgroundColor: "#78e2ff"}} className="p-1 m-0">
                             <button className="btn btn-sm btton_feed pl-2 pr-2" style={{backgroundColor: "rgb(255, 255, 255, 0.4)"}} onClick={() => {this.setState({ errorVisible: 'Required' })}} type="submit"><strong>Post</strong></button> 
+                            <button type="button" className="btn btn-sm btton_feed p-0 ml-1 pl-2 pr-2" style={{height: "30px", backgroundColor: "rgb(255, 255, 255, 0.4)"}}>
+                                <Control.file onChange={this.handleImageChange} model=".image" name="image" id="image" className="form-control p-0" style={{opacity: 0, height: 30, width: 30, position: "absolute", marginTop: -5, marginLeft: -9}}/>
+                                <small><i className="fa fa-image"></i></small> {this.state.file !== null ? this.state.file.name : null}
+                            </button>
+                            
                             <span className="font-weight-light small m-1" style={{float: "right"}}>
                                 { this.state.tweetCharCount ? <div style={{height: 25, width: 25}}><CircularProgressbar strokeWidth={16} maxValue={256} value={this.state.tweetCharCount} text={this.state.tweetCharCount} styles={{textSize: '30px'}} /></div> : null} <strong><Errors className="text-danger" model=".tweet" show="touched" messages={{required: this.state.errorVisible}} /></strong> 
                             </span>
@@ -96,8 +117,9 @@ class Feed extends React.Component {
     
         this.state = {
             popoverOpen: true,
-            selectedPost: null
-            
+            selectedPost: null,
+            imgOpen: false,
+            imgSrc: null
         }
     }
 
@@ -136,7 +158,7 @@ class Feed extends React.Component {
                                 <ListGroupItem className="comment p-2 mb-1 mt-1" style={{border: "none", borderRadius: 10, boxShadow: "0px 0px 0px white"}}>
                                     <div onClick={() => {this.props.fetchTweet(comment._id+'$'+comment.user.username); this.props.history.push('/tweet') }} className="row m-0">
                                         <div className="d-none d-xs-inline d-md-inline d-lg-inline m-0 mt-1 p-0">
-                                            <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                            <Image roundedCircle src={comment.user.profile_picture} alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                         </div>
                                         <div className="container ml-3 p-0" style={{width: 90+"%"}}>
                                             <CardTitle className="mb-1 d-inline"><strong>{comment.user.name} </strong><span className="font-weight-light">@{comment.user.username}</span></CardTitle>
@@ -206,13 +228,15 @@ class Feed extends React.Component {
                         <CardBody className="p-0">
                             <div className="row m-0 p-2">
                                 <div className="d-none d-md-inline d-lg-inline m-0 p-0">
-                                    <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail mt-1" style={{maxWidth: 40}} />
+                                    <Image roundedCircle src={post.user.profile_picture} alt="profile" className="img-thumbnail mt-1" style={{maxWidth: 40}} />
                                 </div>
                                 <div className="container ml-3 p-0" style={{width: 90+"%"}}>
                                     <NavLink style={{color: "black"}} to={"/profile/" + post.user.username }><CardTitle className="mb-1 d-inline"><strong>{post.user.name} </strong><span className="font-weight-light">@{post.user.username}</span> </CardTitle></NavLink>
                                     <small className="font-weight-light d-inline" style={{position: "absolute", right: 16}}>{ (new Date().getTime() - new Date(post.createdAt).getTime())/(1000*3600*24) < 1 ? <Moment fromNow>{post.createdAt}</Moment> : <Moment format="LT D, MMM">{post.createdAt}</Moment>}</small>
                                     <CardText style={{textAlign: "justify"}}>{post.tweet}</CardText>
+                                    
                                 </div>
+                                { post.picture !== null ? <div className="container mt-1"><Image onClick={()=> this.setState({imgSrc: post.picture, imgOpen: true})} rounded src={post.picture} alt="post" className="mx-auto d-block" style={{maxWidth: 400, maxHeight: 400}}/></div> : null }
                             </div>
                             
                             <CardFooter style={{backgroundColor: "#b8f2fc"}} className="p-1 m-0">
@@ -305,6 +329,11 @@ class Feed extends React.Component {
                             </div>
                         </StyleRoot>
                     </div>
+                    <ImgsViewer
+                        imgs={[{ src: this.state.imgSrc }]}
+                        isOpen={this.state.imgOpen}
+                        onClose={()=>this.setState({imgOpen: false})}
+                    />
                 </React.Fragment>
             );
         }

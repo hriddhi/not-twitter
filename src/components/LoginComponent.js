@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link, NavLink } from 'react-router-dom';
 import { Control, LocalForm } from 'react-redux-form';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/ActionCreator';
@@ -62,6 +62,9 @@ class Login extends React.Component {
                                     </div>
                                     <div className="form-group text-center">
                                         <button type="submit" className="btn btn-outline-primary btn-sm">Login</button>
+                                    </div>
+                                    <div className="form-group text-center">
+                                        <NavLink style={{fontWeight: "bold"}} to='/register'>Tired of twitter? Join us!</NavLink>
                                     </div>
                                 </LocalForm>
                             </div>

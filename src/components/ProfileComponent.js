@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardText, CardBody, CardFooter, CardTitle, Button,  Navbar, NavbarBrand, ListGroupItem } from 'reactstrap';
 import { Image, Spinner, Modal } from 'react-bootstrap';
+import { Control, LocalForm } from 'react-redux-form';
 import { fadeIn } from 'react-animations';
 import Radium, { StyleRoot } from 'radium';
 import Moment from 'react-moment';
@@ -56,7 +57,7 @@ class Feed extends React.Component {
                             <CardBody className="p-0">
                                 <div className="row m-0 p-2">
                                     <div className="d-none d-md-inline d-lg-inline s-sm-none m-0 mt-1 p-0">
-                                        <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                        <Image roundedCircle src={this.props.user.profile_picture} alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                     </div>
                                     <div className="container ml-3 p-0" style={{width: 90+"%"}}>
                                         <CardTitle color="black" className="mb-1 d-inline"><strong>{this.props.user.name} </strong><span className="font-weight-light">@{this.props.user.username}</span> </CardTitle>
@@ -87,12 +88,9 @@ class Profile extends React.Component {
             selected: 1,
             show: false,
             setShow: false,
-            showing: null
+            showing: null,
+            isEditing: false
         }
-    }
-
-    componentDidUpdate(){
-        console.log("componentDidUpdate");
     }
 
     componentDidMount(){
@@ -111,12 +109,12 @@ class Profile extends React.Component {
         return (
             <div style={{boxShadow: "0px 4px 4px grey", marginBottom: 5, backgroundColor: "#fff"}}>
                 <div className="container-fluid" style={{height: 120, backgroundSize: "contain", backgroundImage: "url(https://vignette.wikia.nocookie.net/crayonshinchan/images/1/14/-%EB%AA%A8%EC%97%90-Raws-_Crayon_Shin-chan_-SP78_%28KSB_1280x720_x264_AAC%29.mp4_snapshot_09.43_-2017.03.24_21.20.16-.jpg/revision/latest?cb=20170325070000)", position: "relative"}}>
-                    <img src="https://f0.pngfuel.com/png/768/766/shin-chan-illustration-png-clip-art.png" alt="profile" className="img-thumbnail" style={{boxShadow: "0px 4px 4px grey", borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />
+                    <img src={this.props.user.profile_picture} alt="profile" className="img-thumbnail" style={{boxShadow: "0px 4px 4px grey", borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />
                 </div>
                 <div className="container-fluid" style={{height: 50, position: "relative"}}>
-                    <button className="btn btn-sm btton mt-2" style={{float: "right"}}><strong>Edit Profile</strong></button>
+                    <button onClick={()=>this.setState({isEditing: !this.state.isEditing})} className="btn btn-sm btton mt-2" style={{float: "right"}}><strong>Edit Profile</strong></button>
                 </div>
-                <div className="container-fluid" style={{height: 160, border: "solid", borderBottomWidth: 1, borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#cfcfcf"}}>
+                <div className="container-fluid" style={{height: 170, border: "solid", borderBottomWidth: 1, borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#cfcfcf"}}>
                     <div className="mt-2">
                         <h4 className="mb-0 d-inline"><strong>{this.props.user.name}</strong></h4>
                         {
@@ -134,21 +132,63 @@ class Profile extends React.Component {
                     </div>
                     
                     <p className="font-weight-light mb-2">@{this.props.user.username}</p>
+                    <p className="mb-2">{this.props.user.bio}</p>
                     <div className="mb-2">
                         <p style={{cursor: "pointer"}} onClick={()=>{this.setState({show: true, showing: 1}); this.props.fetchUserDetails(this.props.user.following)}} className="d-inline">Following <strong>{[].concat(this.props.user.following).length}</strong></p>
                         <p style={{cursor: "pointer"}} onClick={()=>{this.setState({show: true, showing: 2}); this.props.fetchUserDetails(this.props.user.followers)}} className="ml-3 d-inline">Followers <strong>{[].concat(this.props.user.followers).length}</strong></p>
                     </div>
-                    <p style={{color: "black"}}><i className="fa fa-map-marker"></i> {this.props.user.location} <i className="fa fa-link ml-2"></i> <a href={this.props.user.name}>{this.props.user.link}</a> <i className="fa fa-birthday-cake ml-2"></i> {this.props.user.dob} <i className="fa fa-calendar ml-2"></i> Joined {this.props.user.joined}</p>                    
+                    <p style={{color: "black"}}><i className="fa fa-map-marker"></i> {this.props.user.location} <i className="fa fa-link ml-2"></i> <a href={this.props.user.name}>{this.props.user.link}</a> <i className="fa fa-birthday-cake ml-2"></i> {this.props.user.dob} <i className="fa fa-calendar ml-2"></i> Joined <Moment format="DD MMM, YYYY">{this.props.user.joined}</Moment></p>                    
                 </div>
             </div>
         )
     }
 
+    renderEdit() {
+        return (
+            <LocalForm>
+            <div style={{boxShadow: "0px 4px 4px grey", marginBottom: 5, backgroundColor: "#fff"}}>
+                <div className="container-fluid" style={{height: 120, backgroundSize: "contain", backgroundImage: "url(https://vignette.wikia.nocookie.net/crayonshinchan/images/1/14/-%EB%AA%A8%EC%97%90-Raws-_Crayon_Shin-chan_-SP78_%28KSB_1280x720_x264_AAC%29.mp4_snapshot_09.43_-2017.03.24_21.20.16-.jpg/revision/latest?cb=20170325070000)", position: "relative"}}>
+                    <img src={this.props.user.profile_picture} alt="profile" className="img-thumbnail" style={{boxShadow: "0px 4px 4px grey", borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />
+                </div>
+                <div className="container-fluid" style={{height: 50, position: "relative"}}>
+                    <button className="btn btn-sm btton mt-2" style={{float: "right"}}><strong>Save Profile</strong></button>
+                </div>
+                <div className="container-fluid" style={{height: 170, border: "solid", borderBottomWidth: 1, borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#cfcfcf"}}>
+                    <div className="mt-2">
+                        <Control.text model=".name" name="name" id="name" className="mb-0 d-inline" style={{fontSize: 24, border: 'none', fontWeight: "bold"}} placeholder={this.props.user.name}/>
+                        {
+                            (() => {
+                                var user = this.props.user._id;
+                                var current = this.props.current._id;
+                                if(user !== current){
+                                    if([].concat(this.props.user.followers).includes(current))
+                                        return <button className="btn btn-sm btton" onClick={()=> this.props.followUser(this.props.user._id)} style={{marginLeft: 16, marginTop: -10}}><strong>Unfollow</strong></button>;
+                                    else
+                                        return <button className="btn btn-sm btton" onClick={()=> this.props.followUser(this.props.user._id)} style={{marginLeft: 16, marginTop: -10}}><strong>Follow</strong></button>;
+                                }
+                            })()
+                        }
+                    </div>
+                    
+                    <p className="font-weight-light mb-2">@{this.props.user.username}</p>
+                    <p className="mb-2">{this.props.user.bio}</p>
+                    <div className="mb-2">
+                        <p style={{cursor: "pointer"}} onClick={()=>{this.setState({show: true, showing: 1}); this.props.fetchUserDetails(this.props.user.following)}} className="d-inline">Following <strong>{[].concat(this.props.user.following).length}</strong></p>
+                        <p style={{cursor: "pointer"}} onClick={()=>{this.setState({show: true, showing: 2}); this.props.fetchUserDetails(this.props.user.followers)}} className="ml-3 d-inline">Followers <strong>{[].concat(this.props.user.followers).length}</strong></p>
+                    </div>
+                    <p style={{color: "black"}}><i className="fa fa-map-marker"></i> {this.props.user.location} <i className="fa fa-link ml-2"></i> <a href={this.props.user.name}>{this.props.user.link}</a> <i className="fa fa-birthday-cake ml-2"></i> {this.props.user.dob} <i className="fa fa-calendar ml-2"></i> Joined <Moment format="DD MMM, YYYY">{this.props.user.joined}</Moment></p>                    
+                </div>
+            </div>
+            </LocalForm>
+        )
+    }
+
     render() {
         return (
-            <div style={{width: 100+'%', minHeight: 500}}>
+            <div style={{width: 100+'%', minHeight: 600}}>
                 {this.renderNavbar()}
-                { this.props.isLoading !== 1 ? this.renderProfile() : null}
+                { this.props.isLoading !== 1 && this.state.isEditing === false ? this.renderProfile() : null}
+                { this.props.isLoading !== 1 && this.state.isEditing ? this.renderEdit() : null}
                 <div className="container-fluid p-0" style={{boxShadow: "0px 4px 4px grey"}} >
                     <ul className="nav nav-fill" style={{backgroundColor: "#78e2ff"}}>
                         <li style={{cursor: "pointer"}} onClick={() => this.setState({selected: 1})} className="nav-item">
@@ -202,7 +242,7 @@ class Profile extends React.Component {
                                         <ListGroupItem className="p-2" style={{border: "none", boxShadow: "0px 0px 0px white", border: "solid", borderWidth: "0 0 1px 0", borderColor: "#cfcfcf"}}>
                                             <div className="row m-0">
                                                 <div className="m-0 mt-1 p-0 d-inline">
-                                                    <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                                    <Image roundedCircle src={user.profile_picture} alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                                 </div>
                                                 <div className="d-inline ml-2">
                                                     <NavLink style={{color: "black"}} to={"/profile/" + user.username }><CardTitle className="mb-1 d-inline"><strong>{user.name} </strong> </CardTitle></NavLink>
@@ -229,7 +269,7 @@ class Profile extends React.Component {
                                         <ListGroupItem className="p-2" style={{border: "none", boxShadow: "0px 0px 0px white", border: "solid", borderWidth: "0 0 1px 0", borderColor: "#cfcfcf"}}>
                                             <div className="row m-0">
                                                 <div className="m-0 mt-1 p-0 d-inline">
-                                                    <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
+                                                    <Image roundedCircle src={user.profile_picture} alt="profile" className="img-thumbnail" style={{maxWidth: 40}} />
                                                 </div>
                                                 <div className="d-inline ml-2">
                                                     <NavLink style={{color: "black"}} to={"/profile/" + user.username }><CardTitle className="mb-1 d-inline"><strong>{user.name} </strong> </CardTitle></NavLink>

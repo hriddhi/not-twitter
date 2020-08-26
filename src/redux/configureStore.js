@@ -10,12 +10,18 @@ import { Session } from './session'
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { Profile } from './profile';
+import expireReducer from 'redux-persist-expire';
 
 const persistConfig = {
     key: 'session',
     storage: storage,
     whitelist: ['session'],
-    blacklist: ['posts', 'comments', 'tweet', 'profile', 'register', 'login']
+    blacklist: ['posts', 'comments', 'tweet', 'profile', 'register', 'login'],
+    transforms: [
+        expireReducer('session', {
+            expireSeconds: 3600 * 24 * 30 
+        })
+    ]
 };
 
 const store = createStore(

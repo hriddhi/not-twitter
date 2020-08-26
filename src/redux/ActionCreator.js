@@ -14,7 +14,7 @@ export const loginUser = (user) => (dispatch) => {
         dispatch(createSession(res.data));
     })
     .catch(err => {
-        dispatch(loginFailed());
+        dispatch(loginFailed(err));
     });
 };
 
@@ -26,8 +26,9 @@ export const loginSuccess = () => ({
     type: ActionTypes.LOGIN_SUCCESS
 });
 
-export const loginFailed = () => ({
-    type: ActionTypes.LOGIN_FAILED
+export const loginFailed = (err) => ({
+    type: ActionTypes.LOGIN_FAILED,
+    payload: err.response
 });
 
 export const createSession = (data) => ({
@@ -50,13 +51,9 @@ export const deleteSession = () => ({
 export const registerUser = (user) => (dispatch) => {
     dispatch(registerLoading());
 
-    axios.post('http://localhost:3001/signup', {
-        username: user.username,
-        password: user.password,
-        name: user.firstname + " " + user.lastname,
-        dob: user.dob,
-        location: user.location
-    })
+    console.log(...user);
+
+    axios.post('http://localhost:3001/signup', user)
     .then(res => {
         dispatch(registerSuccess());
     })
@@ -336,7 +333,9 @@ export const postTweet = (tweet) => (dispatch, getState) => {
 
     dispatch(postTweetLocal());
 
-    axios.post('http://localhost:3001/post', { tweet }, {
+    console.log(...tweet);
+    
+    axios.post('http://localhost:3001/post', tweet, {
         headers: {
             'Authorization': 'Bearer ' + getState().session.token
         }

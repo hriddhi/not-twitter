@@ -43,6 +43,7 @@ class Tweet extends React.Component {
                                         <CardTitle className="mb-1 d-inline"><strong>{comment.user.name} </strong><span className="font-weight-light">@{comment.user.username}</span></CardTitle>
                                         <small className="font-weight-light d-inline" style={{position: "absolute", right: 16}}>{ (new Date().getTime() - new Date(comment.createdAt).getTime())/(1000*3600*24) < 1 ? <Moment fromNow>{comment.createdAt}</Moment> : <Moment format="LT D, MMM">{comment.createdAt}</Moment>}</small>
                                         <CardText>{comment.tweet}</CardText>
+                                        
                                     </div>
                                 </div>
                             </ListGroupItem>    
@@ -108,7 +109,7 @@ class Tweet extends React.Component {
                                     <CardBody className="p-0">
                                         <div className="row m-0 p-2">
                                             <div className="col-1 m-0 p-0">
-                                                <Image roundedCircle src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" className="img-thumbnail" style={{maxWidth: 50}} />
+                                                <Image roundedCircle src={this.props.post.user.profile_picture} alt="profile" className="img-thumbnail" style={{maxWidth: 50}} />
                                             </div>
                                             <div className="col-11">
                                                 <NavLink style={{color: "black"}} to={"/profile/" + this.props.post.user.username }><CardTitle className="mb-1 d-inline"><strong>{this.props.post.user.name} </strong></CardTitle></NavLink>
@@ -116,8 +117,9 @@ class Tweet extends React.Component {
                                             </div>
                                         </div>
                                         <div className="container">
-                                            <CardText className="lead pb-2 mb-0" style={{textAlign: "justify", fontSize: 20, border: "solid", borderWidth: "0 0 1px 0", borderColor: "#cfcfcf"}}>{this.props.post.tweet}</CardText>
-                                            <div className="mb-2"><small><Moment format="LT D MMM, YYYY">{this.props.post.createdAt}</Moment></small></div>
+                                            <CardText className="lead pb-2 mb-0" style={{textAlign: "justify", fontSize: 20}}>{this.props.post.tweet}</CardText>
+                                            { this.props.post.picture !== null ? <div className="container m-1 mb-2"><Image rounded src={this.props.post.picture} alt="post" className="mx-auto d-block" style={{maxWidth: 500, maxHeight: 500}}/></div> : null }
+                                            <div className="mb-2" style={{border: "solid", borderWidth: "1px 0 0 0", borderColor: "#cfcfcf"}}><small><Moment format="LT D MMM, YYYY">{this.props.post.createdAt}</Moment></small></div>
                                         </div>
                                         
                                         <CardFooter style={{backgroundColor: "#b8f2fc"}} className="p-1 m-0">

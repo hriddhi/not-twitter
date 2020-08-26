@@ -18,7 +18,7 @@ export const Login = produce((draft = {
 
         case ActionTypes.LOGIN_FAILED:
             draft.isLoading = false;
-            draft.errMess = action.err;
+            draft.errMess = action.payload.status + " " + action.payload.statusText;
             return;
     
         default:

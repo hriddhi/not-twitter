@@ -4,7 +4,9 @@ import produce from 'immer';
 export const Session = produce((draft = {
     session: false,
     token: null,
-    user: null,
+    user: {
+        username: ''
+    },
     errMess: null,
     user_suggestion: null
     }, action) => {
