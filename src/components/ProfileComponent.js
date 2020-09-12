@@ -108,11 +108,11 @@ class Profile extends React.Component {
     renderProfile(){
         return (
             <div style={{boxShadow: "0px 4px 4px grey", marginBottom: 5, backgroundColor: "#fff"}}>
-                <div className="container-fluid" style={{height: 120, backgroundSize: "contain", backgroundImage: "url(https://vignette.wikia.nocookie.net/crayonshinchan/images/1/14/-%EB%AA%A8%EC%97%90-Raws-_Crayon_Shin-chan_-SP78_%28KSB_1280x720_x264_AAC%29.mp4_snapshot_09.43_-2017.03.24_21.20.16-.jpg/revision/latest?cb=20170325070000)", position: "relative"}}>
+                <div className="container-fluid" style={{height: 120, backgroundSize: "contain", backgroundImage: "url(https://d25yuvogekh0nj.cloudfront.net/2019/08/Twitter-Banner-Size-Guide-blog-banner-1250x500.png)", position: "relative"}}>
                     <img src={this.props.user.profile_picture} alt="profile" className="img-thumbnail" style={{boxShadow: "0px 4px 4px grey", borderRadius: 100 + '%', width: 125, height: 125, position: "absolute", bottom: -50, zIndex: 10}} />
                 </div>
                 <div className="container-fluid" style={{height: 50, position: "relative"}}>
-                    <button onClick={()=>this.setState({isEditing: !this.state.isEditing})} className="btn btn-sm btton mt-2" style={{float: "right"}}><strong>Edit Profile</strong></button>
+                    {/* <button onClick={()=>this.setState({isEditing: !this.state.isEditing})} className="btn btn-sm btton mt-2" style={{float: "right"}}><strong>Edit Profile</strong></button> */}
                 </div>
                 <div className="container-fluid" style={{height: 170, border: "solid", borderBottomWidth: 1, borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0, borderColor: "#cfcfcf"}}>
                     <div className="mt-2">
