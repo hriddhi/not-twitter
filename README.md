@@ -16,22 +16,22 @@ npm start
 ## Images
 
 ![Login Page](/public/login_page.jpg)
-Format: ![Alt Text](url)
+Login Page
 
 ![Registration Page](/public/registration_page.jpg)
-Format: ![Alt Text](url)
+Registration Page
 
 ![Home Page](/public/home_page.jpg)
-Format: ![Alt Text](url)
+Home Page
 
 ![Home Page](/public/home_page_2.jpg)
-Format: ![Alt Text](url)
+Home Page
 
 ![Expanded Tweet Page](/public/expanded_tweet_view.jpg)
-Format: ![Alt Text](url)
+Expanded Tweet Page
 
 ![Profile Page](/public/profile_page.jpg)
-Format: ![Alt Text](url)
+Profile Page
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
