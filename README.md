@@ -18,16 +18,19 @@ npm start
 ![Login Page](/public/login_page.jpg)
 Format: ![Alt Text](url)
 
-![GitHub Logo](/images/logo.png)
+![Registration Page](/public/registration_page.jpg)
 Format: ![Alt Text](url)
 
-![GitHub Logo](/images/logo.png)
+![Home Page](/public/home_page.jpg)
 Format: ![Alt Text](url)
 
-![GitHub Logo](/images/logo.png)
+![Home Page](/public/home_page_2.jpg)
 Format: ![Alt Text](url)
 
-![GitHub Logo](/images/logo.png)
+![Expanded Tweet Page](/public/expanded_tweet_view.jpg)
+Format: ![Alt Text](url)
+
+![Profile Page](/public/profile_page.jpg)
 Format: ![Alt Text](url)
 
 ## License
