@@ -7,6 +7,7 @@ A social media application consisting of all the basic features including postin
 ```bash
 npm start
 ```
+*Backend Repo pull required before initialisation.
 
 ## Technology Stack
 
